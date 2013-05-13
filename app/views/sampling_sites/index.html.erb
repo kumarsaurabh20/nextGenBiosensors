@@ -1,0 +1,69 @@
+<%= jqgrid_stylesheets %>
+<%= jqgrid_javascripts %>
+<%= GMap.header %>
+
+<table>
+<tr class="taleft" width="70%"><td class="taleft">
+    <ul class="navigation round taleft">
+      <li><%= link_to "land use mapping", land_use_mappings_path %></li>
+      <li><%= link_to "water use", water_uses_path %></li>
+      <li><%= link_to "water type", water_types_path %></li>
+      <li><%= link_to "geo", geos_path %></li>
+      <li><%= link_to "alt. type", altitude_types_path %></li>
+      <li><%= link_to "catchment area", catchment_areas_path %></li>
+      <li><%= link_to "depth", depths_path %></li>
+      <li><%= link_to "size type", size_typologies_path %></li>
+      <li><%= link_to "geology", geologies_path %></li>
+    </ul>
+  </td></tr>
+</table>
+
+<h1>Sampling sites</h1>
+<%= link_to 'New sampling site', new_sampling_site_path %>
+<br />
+<br />
+
+<script type="text/javascript" >
+     function handleSelection(id) {
+        <%= remote_function (:url => {:controller=> 'sampling_sites',
+                     :action => 'show'},
+                     :with => "id= " + String(id))
+        %>
+     }
+//use, :selection_handler => "handleSelection", :direct_selection => true
+//use, :grid_complete => "grid_complete"
+</script>
+
+
+<%= jqgrid("List of sampling sites: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", sampling_sites_path,
+[
+{ :field => "id", :label => "ID", :width => 35, :resizable => false, :sortable => false, :editable => false, :hidden => true, :search => false },
+        { :field => "act", :label => "", :width => 35 , :resizable => false, :sortable => false, :resizable => false, :search => false },
+{ :field => "code", :label => "Code" },
+{ :field => "name", :label => "Name" },
+{ :field => "w_use_name", :label => "Water use", :sortable => false, :resizable => false, :search => false},
+{ :field => "w_type_name", :label => "Water type", :sortable => false, :resizable => false, :search => false},
+{ :field => "land_name", :label => "Land", :sortable => false, :resizable => false, :search => false},
+{ :field => "geo_name", :label => "Geo pos.", :sortable => false, :resizable => false, :search => false},
+{ :field => "edit_link", :label => "edit", :width => 35, :sortable => false, :resizable => false, :search => false},
+],
+    { :add => false,
+        :edit => false,
+        :inline_edit => false,
+        :rows_per_page => "30",
+        :height => 400,
+        :delete => false,
+        :rownumbers => 'false' }
+    
+) %>
+
+<br />
+
+<%= link_to 'New sampling site', new_sampling_site_path %>
+<br />
+<br />
+<%= @map.to_html %>
+<%= @map.div(:width => 600, :height => 400) %>
+
+
+

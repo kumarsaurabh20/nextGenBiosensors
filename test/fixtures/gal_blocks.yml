@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  block_number: MyString
+  xOrigin: MyString
+  yOrigin: MyString
+  feature_diameter: MyString
+  xFeatures: MyString
+  xSpacing: MyString
+  yFeatures: MyString
+  ySpacing: MyString
+  gal_header: 
+  microarraygal: 
+
+two:
+  block_number: MyString
+  xOrigin: MyString
+  yOrigin: MyString
+  feature_diameter: MyString
+  xFeatures: MyString
+  xSpacing: MyString
+  yFeatures: MyString
+  ySpacing: MyString
+  gal_header: 
+  microarraygal: 

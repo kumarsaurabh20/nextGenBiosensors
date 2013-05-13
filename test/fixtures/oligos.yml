@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  code: MyString
+  oligo_sequence: 
+  gal_header: 
+  gal_block: 
+  row_number: MyString
+  column_number: MyString
+  microarraygal: 
+
+two:
+  code: MyString
+  oligo_sequence: 
+  gal_header: 
+  gal_block: 
+  row_number: MyString
+  column_number: MyString
+  microarraygal: 

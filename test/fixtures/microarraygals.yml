@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  gal_title: MyString
+  gal_file_title: MyString
+  gal_file: 
+  code: MyString
+  loaded_at: 2012-09-26
+  barcode: MyString
+  partner: 
+  note: MyText
+
+two:
+  gal_title: MyString
+  gal_file_title: MyString
+  gal_file: 
+  code: MyString
+  loaded_at: 2012-09-26
+  barcode: MyString
+  partner: 
+  note: MyText

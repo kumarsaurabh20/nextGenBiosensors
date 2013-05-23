@@ -4,9 +4,12 @@ nextGenBiosensors
 A data management and data analysis pipeline for microarrays and metagenomics based experiments
 
 
-Installation after git, ruby and rails setup
-==============================================
-*** LOCAL GEMS FOR THE TOOL ***
+Microaquadt installation after git, ruby and rails setup
+----------------------------------------------------------
+(for every new installation we need to install all gems with in the project folder.)
+
+
+*** LOCAL GEMS ***
 
 actionmailer (2.3.11)
 actionpack (2.3.11)
@@ -41,47 +44,54 @@ rubygems-bundler (1.1.1)
 rvm (1.11.3.7)
 tzinfo (0.3.37)
 
-*Install imagemagick (last installed version was 6.8.5) from source. (/usr/local/bin default location)
+gem install activerecord-mysql2-adapter (required with mysql2)
 
-*Copy database.yml from previous folder in microaquadt/config/database.yml
+install imagemagick (last installed version was 6.8.5) from source. (/usr/local/bin default location)
 
-*In the same config folder put gmaps_api_key.yml
+copy database.yml from previous folder in microaquadt/config/database.yml
 
-*Create database microaquadt_development, as available in the database.yml, in the local database.
+in the same config folder put gmaps_api_key.yml
+
+create database microaquadt_development, as available in the database.yml, in the local database.
 
 Load database schema:
 
 rake db:schema:load
 rake db:addfilters (throws some error, need to check)
 rake db:addsubtable
-rake db:addperson ( its not user table)
-rake db:addoligoreal
 
-*We need to create user table or copy/dump from the main microaqua server database. 
+  rake db:addperson ( its not user table)
+  rake db:addoligoreal
+
+ we need to create user table or copy/dump from the main microaqua server database. 
 
 
-For users having higer version Rake gem (10.0.3/4...) 
+Migrations provide forward and backward step changes to the database. In a production environment, incremental changes must be made to the database during deploys: migrations provide this functionality with a rollback failsafe. If you run rake db:schema:load on a production server, you'll end up deleting all your production data. This is a dangerous habit to get into.
+That being said, I believe it is a decent practice to occasionally "collapse" migrations. This entails deleting old migrations, replacing them with a single migration (very similar to your schema.rb file) and updating the "schema_migrations" table to reflect this change. BE VERY CAREFUL WHEN DOING THIS! You can very easily delete your production data if you aren't careful.
+As a side note, I strongly believe that you should never put data creation in the migration files. The seed.rb file can be used for this, or custom rake or deploy tasks. Putting this into migration files mixes your database schema specification with your data specification and can lead to conflicts when running migration files. 
+
+I came across the same issue...I did what GiridharBandi mentioned above: 
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 require 'tasks/rails'
-
 to:
-
 require 'rake'
 require 'rake/testtask'
 require 'rdoc/task'
 require 'tasks/rails'
-
+Rake version 10.0.4 was there in the gem list but when I tried to uninstall, it said that rake is not installed. So I ignored this and proceeded to install rake 0.8.7. Once its installed, I installed rdoc
 gem install rdoc
 
 <= 1.8.6 : unsupported
  = 1.8.7 : gem install rdoc-data; rdoc-data --install
  = 1.9.1 : gem install rdoc-data; rdoc-data --install
->= 1.9.2 : nothing to do! Yay! 
+>= 1.9.2 : nothing to do! Yay!
+and then everything started working just fine. 
 
 
-*Load the User table from the existing server or new user records. 
-*Load other data for different modules
+Load the User table from the existing server or new user records. 
+Load other data for different modules
+
 
 

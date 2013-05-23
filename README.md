@@ -4,7 +4,7 @@ nextGenBiosensors
 A data management and data analysis pipeline for microarrays and metagenomics based experiments
 
 
-Microaquadt installation after git, ruby and rails setup
+nextGenBiosensors app installation after git, ruby and rails setup
 ----------------------------------------------------------
 (for every new installation we need to install all gems with in the project folder.)
 

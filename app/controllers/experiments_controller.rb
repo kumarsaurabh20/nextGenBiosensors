@@ -78,7 +78,7 @@ class ExperimentsController < ApplicationController
 		
 		respond_to do |format|
 		format.html      
-		format.json { render :json => experiments.to_jqgrid_json([:id,"act","exp_code","filter_name","gal_code","partner_name","gpr_code","exp_date","mi_image","edit"], params[:page], params[:rows], experiments.total_entries) }			
+		format.json { render :json => experiments.to_jqgrid_json([:id,"act","exp_code","filter_name","gal_code","partner_name","gpr_code","exp_date","mi_image", :check, "edit"], params[:page], params[:rows], experiments.total_entries) }			
 		  end
 	    end
     end
@@ -283,7 +283,7 @@ class ExperimentsController < ApplicationController
       end
 
       #4 or 3 = date month and years 1211 OR 121
-      #2011 create increment number by registered date
+      ##2011 create increment number by registered date
       if pdate.nil?
         #only for generate sample code in the new view (but it is hide)
         pdate = Date.today
@@ -301,8 +301,8 @@ class ExperimentsController < ApplicationController
 #      @cnt = Sampling.calculate(:count, :all, :conditions => ['partner_id = ' + @pid.to_s ])
 #      #@lst = Sampling.last
       #2011 create increment number by registered date and partner
-#      @cnt = Sampling.calculate(:count, :all, :conditions => ['partner_id =  ? AND samplingDate >= ? AND samplingDate < ? ',  @pid.to_s, Date.today, 1.day.from_now.to_date ])
-#      @cnt = Sampling.calculate(:count, :all, :conditions => ['code LIKE ? ', '%'+@codegen+'%'])
+#@cnt = Sampling.calculate(:count, :all, :conditions => ['partner_id =  ? AND samplingDate >= ? AND samplingDate < ? ',  @pid.to_s, Date.today, 1.day.from_now.to_date ])
+#@cnt = Sampling.calculate(:count, :all, :conditions => ['code LIKE ? ', '%'+@codegen+'%'])
       @cnt_objs = Experiment.all(:select => "DISTINCT ecode", :conditions => ['ecode LIKE ? ', '%'+@codegen+'%'], :order => 'ecode DESC')
       @cnt = 1 
       if not @cnt_objs.nil? 
@@ -325,8 +325,8 @@ class ExperimentsController < ApplicationController
 
       @codegen += "%02d" % @cnt
 
-      # 1 digit organisms b (bacteria) (PTR5)
-      # or 1 digit (PTR4) water tyrpe R (river) Lake etc..
+      #1 digit organisms b (bacteria) (PTR5)
+      #or 1 digit (PTR4) water tyrpe R (river) Lake etc..
       unless ptype.nil?
         @codegen += ptype.to_s
 #      else

@@ -19,11 +19,9 @@ class CreateMicroArrayImages < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :micro_array_images, :experiment_id
 end
 
   def self.down
-    remove_index :micro_array_images, :experiment_id
     drop_table :micro_array_images
   end
 end

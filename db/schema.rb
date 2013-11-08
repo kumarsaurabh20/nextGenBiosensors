@@ -114,9 +114,10 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
   create_table "filter_samples", :force => true do |t|
     t.integer  "sampling_id",                                                                               :null => false
     t.datetime "samplingDate",                                                                              :null => false
+    t.integer  "partner_id"
     t.integer  "wfilter_id",                                                                                :null => false
     t.decimal  "pore_size",                                  :precision => 5, :scale => 3, :default => 0.0
-    t.integer  "num_filters",                   :limit => 2,                               :default => 0
+    t.integer  "num_filters",                   :limit => 2, :precision => 2, :scale => 0, :default => 0
     t.decimal  "avg_qta",                                    :precision => 4, :scale => 2, :default => 0.0
     t.decimal  "volume",                                     :precision => 4, :scale => 2,                  :null => false
     t.string   "barcode",                                                                                   :null => false
@@ -315,10 +316,12 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
   create_table "micro_array_analysis_files", :force => true do |t|
     t.integer  "experiment_id"
     t.text     "note"
-    t.string   "MIANE_Standard"
+    t.string   "MIAME_Standard"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "micro_array_analysis_files", ["experiment_id"], :name => "index_micro_array_analysis_files_on_experiment_id"
 
   create_table "micro_array_images", :force => true do |t|
     t.text     "note"
@@ -351,6 +354,8 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "micro_array_validations", ["experiment_id"], :name => "index_micro_array_validations_on_experiment_id"
 
   create_table "microarraygals", :force => true do |t|
     t.string   "gal_title"
@@ -430,17 +435,17 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
   add_index "nucleic_acids", ["partner_id"], :name => "index_nucleic_acids_on_partner_id"
 
   create_table "oligo_sequences", :force => true do |t|
-    t.string   "dna_sequence",                        :null => false
-    t.string   "name",                                :null => false
+    t.string   "dna_sequence",                         :null => false
+    t.string   "name",                                 :null => false
     t.string   "code"
     t.text     "description"
-    t.integer  "partner_id",                          :null => false
-    t.integer  "people_id",                           :null => false
+    t.integer  "partner_id",                           :null => false
+    t.integer  "people_id",                            :null => false
     t.integer  "partner_people_id"
     t.integer  "taxonomy_id"
     t.string   "taxonomy_name"
     t.datetime "oligoDate"
-    t.boolean  "available",         :default => true
+    t.boolean  "available",         :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -459,9 +464,6 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "oligos", ["code", "microarraygal_id"], :name => "index_oligos_on_code_and_microarraygal_id"
-  add_index "oligos", ["code"], :name => "index_oligos_on_code"
 
   create_table "operations", :force => true do |t|
     t.integer  "protocol_id"
@@ -483,6 +485,7 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
     t.datetime "updated_at"
   end
 
+  add_index "partner_people", ["partner_id", "person_id"], :name => "index_partner_people_on_partner_id_and_person_id", :unique => true
   add_index "partner_people", ["partner_id"], :name => "index_partner_people_on_partner_id"
   add_index "partner_people", ["person_id"], :name => "index_partner_people_on_person_id"
 
@@ -667,7 +670,7 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
   create_table "wfilters", :force => true do |t|
     t.string   "name",                                                   :default => ""
     t.decimal  "pore_size",                :precision => 5, :scale => 3, :default => 0.0
-    t.integer  "num_filters", :limit => 2,                               :default => 0
+    t.integer  "num_filters", :limit => 2, :precision => 2, :scale => 0, :default => 0
     t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"

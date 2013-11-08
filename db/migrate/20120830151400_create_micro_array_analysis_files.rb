@@ -3,7 +3,7 @@ class CreateMicroArrayAnalysisFiles < ActiveRecord::Migration
     create_table :micro_array_analysis_files do |t|
       t.references :experiment
       t.text :note
-      t.string :MIANE_Standard
+      t.string :MIAME_Standard
 
       t.timestamps
     end

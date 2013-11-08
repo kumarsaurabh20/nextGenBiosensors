@@ -24,10 +24,6 @@ class AddColumnDescriptionToWaterUse < ActiveRecord::Migration
 #+ table filter_sample_preparation 1ton to filter_sample "DNA extraction" "RNA extraction" "PCR" default empty. Name & Note
     add_column :filter_samples, :storage, :text, :null => true
 
-    change_table :micro_arrays do |t|
-        t.references :protocols, :null => true
-    end
-
   end
 
   def self.down

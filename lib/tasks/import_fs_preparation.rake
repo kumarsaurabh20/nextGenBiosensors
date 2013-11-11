@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 
 namespace :db do
   desc "Empty existing data from FilterSamplePreparation and  + Fill database with default data"

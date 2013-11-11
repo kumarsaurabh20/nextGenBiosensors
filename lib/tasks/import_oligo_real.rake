@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 
 namespace :db do
   desc "Empty existing data from OligoSequence and Fill database with default sample filter data"

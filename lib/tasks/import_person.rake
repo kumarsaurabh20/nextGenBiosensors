@@ -1,4 +1,5 @@
-
+# encoding: utf-8
+#added the encoding because when installing jqgrid the rake task returned error on encodings. had to include in all the import_* file in this directory
 
 namespace :db do
   desc "Empty existing data from OligoSequence and Fill database with default sample filter data"
@@ -29,7 +30,7 @@ Person.create!( :firstname => "HOLDEN", :lastname =>"Nicholas", :phone => "", :e
 Person.create!( :firstname => "PANAIOTOV", :lastname =>"Stefan", :phone => "", :email => "spanaiotov@yahoo.com", :town =>"SOFIA")
 Person.create!( :firstname => "ELLIOTT", :lastname =>"Christopher", :phone => "", :email => "chris.elliott@qub.ac.uk", :town =>"BELFAST")
 Person.create!( :firstname => "MEYER", :lastname =>"Thomas", :phone => "", :email => "tmeyer@marilim.de", :town =>"TIEV")
-Person.create!( :firstname => "ALBAY", :lastname =>"MERIÇ", :phone => "", :email => "albay.hermano@gmail.com", :town =>"ISTANBUL")
+Person.create!( :firstname => "ALBAY", :lastname =>"MERIC", :phone => "", :email => "albay.hermano@gmail.com", :town =>"ISTANBUL")
 Person.create!( :firstname => "AMPARO", :lastname =>"Alfonso", :phone => "", :email => "amparo.alfonso@usc.es", :town =>"SANTIAGO DE COMPOSTELA")
 Person.create!( :firstname => "WEIGEL", :lastname =>"Wilfried", :phone => "", :email => "weigel@scienion.de", :town =>"BERLIN")
 Person.create!( :firstname => "DEZY", :lastname =>"dezy", :phone => "", :email => "dezy.dezy@unicam.it", :town =>"CAMERINO")

@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 
 namespace :db do
   desc "Empty existing data from FilterSample and Fill database with default sample filter data"
@@ -92,7 +92,7 @@ FilterSample.create!( :samplingDate => "2011/10/10", :sampling_id =>10, :code =>
 FilterSample.create!( :samplingDate => "2011/10/10", :sampling_id =>10, :code => "P03-111011-01-F06", :wfilter_id => 9, :pore_size =>0.8, :num_filters =>2, :volume => 50, :barcode => "FR3111010SO08_1/_2", :avg_qta => 0,  :note => "auto import. ")
 FilterSample.create!( :samplingDate => "2011/10/10", :sampling_id =>10, :code => "P03-111011-01-F07", :wfilter_id => 10, :pore_size =>0.45, :num_filters =>2, :volume => 50, :barcode => " FR3111010SO045_1/_2", :avg_qta => 0,  :note => "auto import. ")
 FilterSample.create!( :samplingDate => "2011/10/10", :sampling_id =>10, :code => "P03-111011-01-F08", :wfilter_id => 11, :pore_size =>0.1, :num_filters =>3, :volume => 50, :barcode => "FR3111010SO01_1/_2", :avg_qta => 0,  :note => "auto import. ")
-FilterSample.create!( :samplingDate => "2011/10/10", :sampling_id =>10, :code => "P03-111011-01-F09", :wfilter_id => 12, :pore_size =>0.025, :num_filters =>2, :volume => 50, :barcode => "FR3111010SO0025_1/_2 viruses", :avg_qta => 0,  :note => "auto import. 800 µl with glycerol to a final concentration of 20%")
+FilterSample.create!( :samplingDate => "2011/10/10", :sampling_id =>10, :code => "P03-111011-01-F09", :wfilter_id => 12, :pore_size =>0.025, :num_filters =>2, :volume => 50, :barcode => "FR3111010SO0025_1/_2 viruses", :avg_qta => 0,  :note => "auto import. ")
 FilterSample.create!( :samplingDate => "2011/10/19", :sampling_id =>11, :code => "P03-111019-01-F01", :wfilter_id => 1, :pore_size =>99, :num_filters =>4, :volume => 50, :barcode => " FR3111019AM Raw 1_5", :avg_qta => 0,  :note => "auto import. from first elution")
 FilterSample.create!( :samplingDate => "2011/10/19", :sampling_id =>11, :code => "P03-111019-01-F02", :wfilter_id => 2, :pore_size =>20, :num_filters =>2, :volume => 50, :barcode => " FR3111019AM20_1/_2", :avg_qta => 0,  :note => "auto import. ")
 FilterSample.create!( :samplingDate => "2011/10/19", :sampling_id =>11, :code => "P03-111019-01-F03", :wfilter_id => 3, :pore_size =>10, :num_filters =>2, :volume => 50, :barcode => " FR3111019AM10_1/_2", :avg_qta => 0,  :note => "auto import. ")

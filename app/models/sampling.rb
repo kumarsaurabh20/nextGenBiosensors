@@ -20,7 +20,9 @@
 
 class Sampling < ActiveRecord::Base
 
-include ActionController::UrlWriter
+#include ActionController::UrlWriter (deprecated)
+
+include Rails.application.routes.url_helpers
 include SamplingsHelper
 
   validates_presence_of :code, :message => "Can't be empty, field is mandatory. "

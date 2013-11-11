@@ -1,3 +1,7 @@
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/
 lib/tasks/import.rake
 config/*.yml
 config/database.yml

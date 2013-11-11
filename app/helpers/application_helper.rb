@@ -1,7 +1,6 @@
-# Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
-  # Return a title on a per-page basis.
+# Return a title on a per-page basis.
   def title
     base_title = "Microaqua"
     if @title.nil?
@@ -79,5 +78,12 @@ module ApplicationHelper
   end
   #use as <%= image_tag avatar_url(user) %>
 
-end
 
+
+
+
+
+
+
+
+end

@@ -4,13 +4,12 @@
 <table>
   <tr class="taleft" width="70%"><td class="taleft">
     <ul class="navigation round taleft">
-        <li><%= link_to "equipment", sampling_equipments_path %></li>
+        <li class="hide" style="display: none;"><%= link_to "equipment", sampling_equipments_path %></li>
         <li class="hide" style="display: none;"><%= link_to "code type", code_types_path %></li>
         <li class="hide" style="display: none;"><%= link_to "protocol", protocols_path %></li>
-    </ul>
-    <ul class="navigation round taleft">
         <li><%= link_to "Samplings Batch File Upload", new_batch_sampling_path %></li>
     </ul>
+    
   </td></tr>
 </table>
 
@@ -22,17 +21,16 @@
 
 //jQuery("#ngbgrid").jqGrid('navGrid','hideCol',"ID"); }); 
 
-     function handleSelection(id) {
-        <%= remote_function (:url => {:controller=> 'sampling_sites',
-                     :action => 'show'},
-                     :with => "id= " + String(id))
-        %>
-     }
+   function handleSelection(id) {
+        <%= remote_function(:url => {:controller=> 'sampling_sites',
+                   :action => 'show'})
+      %>  }
+ 
 //use, :selection_handler => "handleSelection", :direct_selection => true
 //use, :grid_complete => "grid_complete" 
 </script>
 
-<%= jqgrid("List of samplings: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", samplings_path,
+<%=raw jqgrid("List of samplings: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", "/samplings",
 	[
 		{ :field => "id", :label => "ID", :width => 50, :resizable => false, :sortable => false, :editable => false, :hidden => true},
         { :field => "act", :label => "", :width => 50 , :resizable => false, :sortable => false, :search => false },
@@ -43,14 +41,8 @@
 		{ :field => "sampling_equipment_name", :label => "Equipment", :search => false, :width => 100, :sortable => false  },
 		{ :field => "edit_link", :label => "edit", :search => false, :sortable => false, :width => 50 , :resizable => false},
 	], 
-    {   :add => false, 
-        :edit => false, 
-        :inline_edit => false, 
-        :delete => false, 
-        :rows_per_page => "50", 
-        :height => 400, 
-        :rownumbers => 'false', 
-        :subgrid=> { 
+    {:autowidth => true,
+    :subgrid=> { 
                 :url => filter_samples_path,
                 :rows_per_page => 20,
                 :sort_column => 'code',
@@ -69,8 +61,7 @@
 		            { :field => "edit_link", :label => "edit", :sortable => false, :width => 35 , :resizable => false, :search => false},
 					  ]
 					}
-
- }
+}
 
 ) %>
 

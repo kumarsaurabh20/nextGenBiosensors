@@ -63,7 +63,9 @@ class User < ActiveRecord::Base
     #we’ll store the remember token in the database
     #and at some point use the find_by_remember_token method
     #But the validations will fail if we simply use save (no virtual password attribute which is required)
-    save_without_validation
+    
+    #save_without_validation -- edited by kumar
+    save(validate=false)
   end
 
   private

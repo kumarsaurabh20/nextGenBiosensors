@@ -1,5 +1,17 @@
 class FilterSamplesController < AuthController
 
+respond_to :html,:json
+  
+  protect_from_forgery :except => [:post_data]
+  
+  # Don't forget to edit routes if you're using RESTful routing
+  # 
+  #resources :filter_samples,:only => [:index] do
+  #   collection do
+  #     post "post_data"
+  #   end
+  # end
+
   #only Requiring the right user to change own contents
   before_filter :correct_user, :only => [:edit, :update, :delete]
 #  before_create :set_foo_to_now  --> Rails 3
@@ -35,79 +47,116 @@ class FilterSamplesController < AuthController
 #        end
 #    end
 
+
+ def post_data
+    message=""
+    filter_sample_params = { :id => params[:id],:sampling_id => params[:sampling_id],:samplingDate => params[:samplingDate],:partner_id => params[:partner_id],:wfilter_id => params[:wfilter_id],:pore_size => params[:pore_size],:num_filters => params[:num_filters],:avg_qta => params[:avg_qta],:volume => params[:volume],:barcode => params[:barcode],:code => params[:code],:note => params[:note],:storage => params[:storage],:filter_sample_preparations_id => params[:filter_sample_preparations_id] }
+    case params[:oper]
+    when 'add'
+      if params["id"] == "_empty"
+        filter_sample = FilterSample.create(filter_sample_params)
+        message << ('add ok') if filter_sample.errors.empty?
+      end
+      
+    when 'edit'
+      filter_sample = FilterSample.find(params[:id])
+      message << ('update ok') if filter_sample.update_attributes(filter_sample_params)
+    when 'del'
+      FilterSample.destroy_all(:id => params[:id].split(","))
+      message <<  ('del ok')
+    when 'sort'
+      filter_samples = FilterSample.all
+      filter_samples.each do |filter_sample|
+        filter_sample.position = params['ids'].index(filter_sample.id.to_s) + 1 if params['ids'].index(filter_sample.id.to_s) 
+        filter_sample.save
+      end
+      message << "sort ak"
+    else
+      message <<  ('unknown action')
+    end
+    
+    unless (filter_sample && filter_sample.errors).blank?  
+      filter_sample.errors.entries.each do |error|
+        message << "<strong>#{FilterSample.human_attribute_name(error[0])}</strong> : #{error[1]}<br/>"
+      end
+      render :json =>[false,message]
+    else
+      render :json => [true,message] 
+    end
+  end
+
+
   # GET /filter_samples
   # GET /filter_samples.xml
   def index
     @title = "List filter samples"
 
-#		{ :field => "id", :label => "ID", :width => 35, 
-#		{ :field => "sample_name", :label => "Sampling", :sortable => true, :editable => false, :width => 120 },
-#		{ :field => "code", :label => "Filter Microaqua code", :width => "250" },
-#		{ :field => "barcode", :label => "Partner barcode"
-#		{ :field => "filter_name", :label => "pore size (µm)", 
-#		{ :field => "num_filters", :label => "n° Tube", :width => 50, :class => "taright" },
-#		{ :field => "volume", :label => "Volume (lt)", :width => 70, :class => "taright" },
+    #if params[:id].present?
+    #    logger.warn("#{Time.now} - filter_sampling filtered by: #{params[:id]}")        
+    #    filter_samples = FilterSample.find(:all, :conditions => [ "sampling_id = ?", params[:id]]) do
+    #        paginate :page => params[:page], :per_page => params[:rows]      
+    #        order_by "#{params[:sidx]} #{params[:sord]}"
+    #    end
+    #else
+    #    filter_samples = FilterSample.find(:all, :joins => [:sampling, :wfilter]) do
+    #        if params[:_search] == "true"
+    #            sampling.volume =~ "%#{params[:sample_name]}%" if params[:sample_name].present?
+     
+    #            code =~ "%#{params[:code]}%" if params[:code].present?
+    #            barcode =~ "%#{params[:barcode]}%" if params[:barcode].present?
+    #            #wfilter.pore_size >= "%#{params[:filter_name]}%" if params[:filter_name].present?
+    #            wfilter.pore_size =~ "%#{params[:filter_name]}%" if params[:filter_name].present?
+    #            #pore_size >= "%#{params[:filter_name]}%" if params[:filter_name].present?
+    #            volume =~ "%#{params[:volume]}%" if params[:volume].present?
+    #            num_filters =~ "%#{params[:num_filters]}%" if params[:num_filters].present?
+    #        end
+            #paginate :page => params[:page], :per_page => params[:rows]      
+            #if params[:sidx] == "filter_name"
+            #    order_by "wfilters.pore_size #{params[:sord]}"
+            #elsif params[:sidx] == "sample_name"
+            #    order_by "samplings.code #{params[:sord]}"
 
-
-    if params[:id].present?
-        logger.warn("#{Time.now} - filter_sampling filtered by: #{params[:id]}")
-        #@filter_samples = FilterSample.all(:conditions => [ "sampling_id = ?", params[:id]])
-        #@cond = params[:id]
-        filter_samples = FilterSample.find(:all, :conditions => [ "sampling_id = ?", params[:id]]) do
-#            if params[:_search] == "true"
-#                xsample_name =~ "%#{params[:sample_name]}%" if params[:sample_name].present?
-#                code =~ "%#{params[:code]}%" if params[:code].present?
-#                #xfilter_name >= "%#{params[:filter_name]}%" if params[:filter_name].present?
-#                pore_size >= "%#{params[:filter_name]}%" if params[:filter_name].present?
-#                volume =~ "%#{params[:volume]}%" if params[:volume].present?
-#                num_filters =~ "%#{params[:num_filters]}%" if params[:num_filters].present?
-#            end
-            paginate :page => params[:page], :per_page => params[:rows]      
-            order_by "#{params[:sidx]} #{params[:sord]}"
-        end
-    else
-        #@filter_samples = FilterSample.all
-        #@cond = "sampling_id"
-        #filter_samples = FilterSample.find(:all, :joins => [:sampling, :wfilter, :sampling_site]) do
-        filter_samples = FilterSample.find(:all, :joins => [:sampling, :wfilter]) do
-            if params[:_search] == "true"
-                sampling.volume =~ "%#{params[:sample_name]}%" if params[:sample_name].present?
-                #sampling.sampling_site.code =~ "%#{params[:sample_name]}%" if params[:sample_name].present?
-                code =~ "%#{params[:code]}%" if params[:code].present?
-                barcode =~ "%#{params[:barcode]}%" if params[:barcode].present?
-                #wfilter.pore_size >= "%#{params[:filter_name]}%" if params[:filter_name].present?
-                wfilter.pore_size =~ "%#{params[:filter_name]}%" if params[:filter_name].present?
-                #pore_size >= "%#{params[:filter_name]}%" if params[:filter_name].present?
-                volume =~ "%#{params[:volume]}%" if params[:volume].present?
-                num_filters =~ "%#{params[:num_filters]}%" if params[:num_filters].present?
-            end
-            paginate :page => params[:page], :per_page => params[:rows]      
-            if params[:sidx] == "filter_name"
-                order_by "wfilters.pore_size #{params[:sord]}"
-            elsif params[:sidx] == "sample_name"
-                order_by "samplings.code #{params[:sord]}"
-            #After set join conditions we fall in Mysql::Error: Column 'volume' in order clause is ambiguous
             #set the database table name and column
-            elsif params[:sidx] == "code"
-                order_by "filter_samples.code #{params[:sord]}"
-            elsif params[:sidx] == "num_filters"
-                order_by "filter_samples.num_filters #{params[:sord]}"
-            elsif params[:sidx] == "volume"
-                order_by "filter_samples.volume #{params[:sord]}"
-            else
-                order_by "#{params[:sidx]} #{params[:sord]}"
-            end
-        end
+            #elsif params[:sidx] == "code"
+            #    order_by "filter_samples.code #{params[:sord]}"
+            #elsif params[:sidx] == "num_filters"
+            #    order_by "filter_samples.num_filters #{params[:sord]}"
+            #elsif params[:sidx] == "volume"
+            #    order_by "filter_samples.volume #{params[:sord]}"
+            #else
+            #    order_by "#{params[:sidx]} #{params[:sord]}"
+            #end
+        #end
+    #end
+
+
+    #respond_to do |format|
+    #    format.html # index.html.erb
+    #    #format.xml  { render :xml => @filter_samples }
+    #    format.json { render :json => filter_samples.to_jqgrid_json(
+    #        [:id, "act","code",:sample_name,"barcode","filter_name",:num_filters,:volume,"edit"],
+    #        params[:page], params[:rows], filter_samples.total_entries) }			
+    #end
+
+    index_columns ||= [:id, "act","code",:sample_name,"barcode","filter_name",:num_filters,:volume,"edit"]
+    current_page = params[:page] ? params[:page].to_i : 1
+    rows_per_page = params[:rows] ? params[:rows].to_i : 10
+
+    conditions={:page => current_page, :per_page => rows_per_page}
+    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+    
+    if params[:_search] == "true"
+      conditions[:conditions]=filter_by_conditions(index_columns)
+    end
+    
+    @filter_samples=FilterSample.paginate(conditions)
+    total_entries=@filter_samples.total_entries
+    
+    respond_with(@filter_samples) do |format|
+      format.json { render :json => @filter_samples.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
     end
 
 
-    respond_to do |format|
-        format.html # index.html.erb
-        #format.xml  { render :xml => @filter_samples }
-        format.json { render :json => filter_samples.to_jqgrid_json(
-            [:id, "act","code",:sample_name,"barcode","filter_name",:num_filters,:volume,"edit"],
-            params[:page], params[:rows], filter_samples.total_entries) }			
-    end
   end
 
   # GET /filter_samples/1

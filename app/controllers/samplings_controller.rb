@@ -1,4 +1,4 @@
-class SamplingsController < ApplicationController
+class SamplingsController < AuthController
   respond_to :html,:json
   
   protect_from_forgery :except => [:post_data]

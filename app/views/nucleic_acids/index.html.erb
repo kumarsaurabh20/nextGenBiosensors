@@ -17,7 +17,7 @@
 <br />
 <br />
 
-<%= jqgrid("List of nucleic acids: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", nucleic_acids_path,
+<%=raw jqgrid("List of nucleic acids: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", "/nucleic_acids",
 	[
 		{ :field => "id", :label => "ID", :width => 35, :resizable => false, :sortable => false, :editable => false, :hidden => true}, 
         { :field => "act", :label => "", :width => 35 , :resizable => false, :sortable => false, :search => false },
@@ -29,7 +29,8 @@
 		{ :field => "date", :label => "date", :width => 100, :class => "taright", :search => true, :sortable => true },
 		{ :field => "edit_link", :label => "edit", :sortable => false, :width => 35 , :resizable => false, :search => false},
 	], 
-    {   :add => false, 
+    {   :autowidth => true,
+        :add => false, 
         :edit => false, 
         :inline_edit => false, 
         :delete => false, 

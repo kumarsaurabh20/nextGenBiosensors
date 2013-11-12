@@ -1,9 +1,15 @@
 class NucleicAcid < ActiveRecord::Base
 
-    validates_presence_of :code => "Can't be empty, field is mandatory. "
-    validates_length_of :code,
-        :maximum => 30,
-        :too_long => "{{count}} characters is the maximum allowed"
+ include Rails.application.routes.url_helpers
+
+ ###****************IMPORTANT(check)*****************####
+
+    #validates_presence_of :code => "Can't be empty, field is mandatory. "
+    #validates_length_of :code,
+    #    :maximum => 30,
+    #    :too_long => "{{count}} characters is the maximum allowed"
+
+ ###****************IMPORTANT(check)*****************####
 
 
     belongs_to :filter_sample
@@ -49,7 +55,6 @@ class NucleicAcid < ActiveRecord::Base
         self.nucleic_acid_type.verbose_me
     end
 
-include ActionController::UrlWriter
     def edit
         "<a href='" + edit_nucleic_acid_path(self) + "' title='Edit selected row'><div class='ui-pg-div' title='Edit selected row'><span class='ui-icon ui-icon-pencil' title='Edit selected row'></span></div></a>"
     end

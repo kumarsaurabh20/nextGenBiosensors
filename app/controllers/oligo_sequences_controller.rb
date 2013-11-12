@@ -1,10 +1,21 @@
-class OligoSequencesController < AuthController   #ApplicationController
+class OligoSequencesController < AuthController 
 
-require 'faster_csv'
-require 'fastercsv'
+  require 'fastercsv'
 
+  respond_to :html,:json
+  
+  protect_from_forgery :except => [:post_data]
   #only Requiring the right user to change own contents
   before_filter :correct_user, :only => [:edit, :update, :delete, :destroy]
+  
+  # Don't forget to edit routes if you're using RESTful routing
+  # 
+  #resources :oligo_sequences,:only => [:index] do
+  #   collection do
+  #     post "post_data"
+  #   end
+  # end
+
 
   # remote_function AJAX CALL 
   #Ko http://apidock.com/rails/v2.3.8/ActionView/Helpers/PrototypeHelper/remote_function prototype function
@@ -92,66 +103,124 @@ require 'fastercsv'
 #        end
 #    end
 
+
+   def post_data
+    message=""
+    oligo_sequence_params = { :id => params[:id],:dna_sequence => params[:dna_sequence],:name => params[:name],:code => params[:code],:description => params[:description],:partner_id => params[:partner_id],:people_id => params[:people_id],:partner_people_id => params[:partner_people_id],:taxonomy_id => params[:taxonomy_id],:taxonomy_name => params[:taxonomy_name],:oligoDate => params[:oligoDate],:available => params[:available] }
+    case params[:oper]
+    when 'add'
+      if params["id"] == "_empty"
+        oligo_sequence = OligoSequence.create(oligo_sequence_params)
+        message << ('add ok') if oligo_sequence.errors.empty?
+      end
+      
+    when 'edit'
+      oligo_sequence = OligoSequence.find(params[:id])
+      message << ('update ok') if oligo_sequence.update_attributes(oligo_sequence_params)
+    when 'del'
+      OligoSequence.destroy_all(:id => params[:id].split(","))
+      message <<  ('del ok')
+    when 'sort'
+      oligo_sequences = OligoSequence.all
+      oligo_sequences.each do |oligo_sequence|
+        oligo_sequence.position = params['ids'].index(oligo_sequence.id.to_s) + 1 if params['ids'].index(oligo_sequence.id.to_s) 
+        oligo_sequence.save
+      end
+      message << "sort ak"
+    else
+      message <<  ('unknown action')
+    end
+    
+    unless (oligo_sequence && oligo_sequence.errors).blank?  
+      oligo_sequence.errors.entries.each do |error|
+        message << "<strong>#{OligoSequence.human_attribute_name(error[0])}</strong> : #{error[1]}<br/>"
+      end
+      render :json =>[false,message]
+    else
+      render :json => [true,message] 
+    end
+  end
+
+
   # GET /oligo_sequences
   # GET /oligo_sequences.xml
   def index
-    @oligo_sequences = OligoSequence.all
+    #@oligo_sequences = OligoSequence.all
     @title = "List of oligo sequences"
 
     #oligo_sequences = OligoSequence.find(:all, :joins => [:people, :partner]) do
-#KAPPAO: Association named 'people' was not found; perhaps you misspelled it?
+    #KAPPAO: Association named 'people' was not found; perhaps you misspelled it?
     #oligo_sequences = OligoSequence.find(:all, :joins => [:person, :partner]) do
-#Mysql::Error: Unknown column 'oligo_sequences.person_id' in 'on clause': SELECT `oligo_sequences`.* FROM `oligo_sequences`   INNER JOIN `people` ON `people`.id = `oligo_sequences`.person_id  INNER JOIN `partners` ON `partners`.id = `oligo_sequences`.partner_id   LIMIT 0, 20
-#KAPPAO: migrate person generate people table but the rails do not re-construct right renaming
+    #Mysql::Error: Unknown column 'oligo_sequences.person_id' in 'on clause': SELECT `oligo_sequences`.* FROM `oligo_sequences`   INNER JOIN `people` ON `people`.id = `oligo_sequences`.person_id  INNER JOIN `partners` ON `partners`.id = `oligo_sequences`.partner_id   LIMIT 0, 20
+    #KAPPAO: migrate person generate people table but the rails do not re-construct right renaming
     _str = ""
-    oligo_sequences = OligoSequence.find(:all, :joins => [:partner]) do
-        if params[:_search] == "true"
-            name =~ "%#{params[:verbose_me]}%" if params[:verbose_me].present?
-#            verbose_me =~ "%#{params[:verbose_me]}%" if params[:verbose_me].present?
-            dna_sequence =~ "%#{params[:dna_ellipsis]}%" if params[:dna_ellipsis].present?
-#            dna_ellipsis =~ "%#{params[:dna_ellipsis]}%" if params[:dna_ellipsis].present?
-            code =~ "%#{params[:code]}%" if params[:code].present?
-            taxonomy_name =~ "%#{params[:taxonomy_name]}%" if params[:taxonomy_name].present?
-#            taxonomy_name =~ "%#{params[:taxo_name_id]}%" if params[:taxo_name_id].present?
-            taxonomy_id =~ "%#{params[:taxonomy_id]}%" if params[:taxonomy_id].present?
-            if params[:available].present?
-                _str = params[:available].strip.downcase                
-                if _str == "true" or _str == "1"
-                    available = "true"
-                else
-                    available = "false"
-                end
-            end    
-            partner.code =~ "%#{params[:partner_name]}%" if params[:partner_name].present?
-            people.firstname =~ "%#{params[:people_name]}%" if params[:people_name].present?
-        end
-        paginate :page => params[:page], :per_page => params[:rows]      
-        if params[:sidx] == "verbose_me"
-            order_by "oligo_sequences.name #{params[:sord]}"
-        elsif params[:sidx] == "dna_ellipsis"
-            order_by "dna_sequence #{params[:sord]}"
-        #After set join conditions we fall in Mysql::Error: Column 'volume' in order clause is ambiguous
-        #set the database table name and column
-        elsif params[:sidx] == "code"
-            order_by "oligo_sequences.code #{params[:sord]}"
-        elsif params[:sidx] == "partner_name"
-            order_by "partners.code #{params[:sord]}"
-        elsif params[:sidx] == "people_name"
-            order_by "peoples.firstname #{params[:sord]}, people.lastname #{params[:sord]}"
-        else
-            order_by "#{params[:sidx]} #{params[:sord]}"
-        end
-    end
+   
+
+   #oligo_sequences = OligoSequence.find(:all, :joins => [:partner]) do
+   #     if params[:_search] == "true"
+   #         name =~ "%#{params[:verbose_me]}%" if params[:verbose_me].present?
+   #         dna_sequence =~ "%#{params[:dna_ellipsis]}%" if params[:dna_ellipsis].present?
+   #         code =~ "%#{params[:code]}%" if params[:code].present?
+   #         taxonomy_name =~ "%#{params[:taxonomy_name]}%" if params[:taxonomy_name].present?
+   #         taxonomy_id =~ "%#{params[:taxonomy_id]}%" if params[:taxonomy_id].present?
+   #         if params[:available].present?
+   #             _str = params[:available].strip.downcase                
+   #            if _str == "true" or _str == "1"
+   #                 available = "true"
+   #             else
+   #                available = "false"
+   #            end
+   #         end    
+   #         partner.code =~ "%#{params[:partner_name]}%" if params[:partner_name].present?
+   #        people.firstname =~ "%#{params[:people_name]}%" if params[:people_name].present?
+   #     end
+   #     paginate :page => params[:page], :per_page => params[:rows]      
+   #     if params[:sidx] == "verbose_me"
+   #         order_by "oligo_sequences.name #{params[:sord]}"
+   #     elsif params[:sidx] == "dna_ellipsis"
+   #         order_by "dna_sequence #{params[:sord]}"
+   #     #After set join conditions we fall in Mysql::Error: Column 'volume' in order clause is ambiguous
+   #    #set the database table name and column
+   #     elsif params[:sidx] == "code"
+   #         order_by "oligo_sequences.code #{params[:sord]}"
+   #     elsif params[:sidx] == "partner_name"
+   #         order_by "partners.code #{params[:sord]}"
+   #     elsif params[:sidx] == "people_name"
+   #        order_by "peoples.firstname #{params[:sord]}, people.lastname #{params[:sord]}"
+   #     else
+   #        order_by "#{params[:sidx]} #{params[:sord]}"
+   #     end
+   # end
 
     
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @oligo_sequences } 
-      format.json { render :json => oligo_sequences.to_jqgrid_json(
-            [:id, "act", :code, "verbose_me", "dna_ellipsis", "partner_name", "people_name", :taxonomy_name, :taxonomy_id, :available, "edit"],
-            params[:page], params[:rows], oligo_sequences.total_entries) }			
+  #  respond_to do |format|
+  #  format.html # index.html.erb
+  #    format.xml  { render :xml => @oligo_sequences } 
+  #    format.json { render :json => oligo_sequences.to_jqgrid_json(
+  #          [:id, "act", :code, "verbose_me", "dna_ellipsis", "partner_name", "people_name", :taxonomy_name, :taxonomy_id, :available, "edit"],
+  #          params[:page], params[:rows], oligo_sequences.total_entries) }			
 
+  #  end
+
+
+    index_columns ||= [:id, "act", :code, "verbose_me", "dna_ellipsis", "partner_name", "people_name", :taxonomy_name, :taxonomy_id, :available, "edit"]
+    current_page = params[:page] ? params[:page].to_i : 1
+    rows_per_page = params[:rows] ? params[:rows].to_i : 10
+
+    conditions={:page => current_page, :per_page => rows_per_page}
+    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+    
+    if params[:_search] == "true"
+      conditions[:conditions]=filter_by_conditions(index_columns)
     end
+    
+    @oligo_sequences=OligoSequence.paginate(conditions)
+    total_entries=@oligo_sequences.total_entries
+    
+    respond_with(@oligo_sequences) do |format|
+      format.json { render :json => @oligo_sequences.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+    end
+
   end
 
   # GET /oligo_sequences/1

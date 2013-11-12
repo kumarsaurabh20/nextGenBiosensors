@@ -1,5 +1,18 @@
 class SamplingSitesController < AuthController
 
+  respond_to :html,:json
+  
+  protect_from_forgery :except => [:post_data]
+  
+  # Don't forget to edit routes if you're using RESTful routing
+  # 
+  #resources :sampling_sites,:only => [:index] do
+  #   collection do
+  #     post "post_data"
+  #   end
+  # end
+
+
   # GET /sampling_sites
   # GET /sampling_sites.xml
 
@@ -9,85 +22,139 @@ class SamplingSitesController < AuthController
   # @wu = WaterUse.find(params[:water_uses_id])
   #end
 
+
+  def post_data
+    message=""
+    sampling_site_params = { :id => params[:id],:code => params[:code],:name => params[:name],:altitude_types_id => params[:altitude_types_id],:catchment_areas_id => params[:catchment_areas_id],:size_typologies_id => params[:size_typologies_id],:geologies_id => params[:geologies_id],:depth_id => params[:depth_id],:link => params[:link],:water_type_id => params[:water_type_id],:water_use_id => params[:water_use_id],:land_use_mapping_id => params[:land_use_mapping_id],:geo_id => params[:geo_id],:geos_id => params[:geos_id],:geos_type => params[:geos_type],:note => params[:note],:distance_to_source => params[:distance_to_source] }
+    case params[:oper]
+    when 'add'
+      if params["id"] == "_empty"
+        sampling_site = SamplingSite.create(sampling_site_params)
+        message << ('add ok') if sampling_site.errors.empty?
+      end
+      
+    when 'edit'
+      sampling_site = SamplingSite.find(params[:id])
+      message << ('update ok') if sampling_site.update_attributes(sampling_site_params)
+    when 'del'
+      SamplingSite.destroy_all(:id => params[:id].split(","))
+      message <<  ('del ok')
+    when 'sort'
+      sampling_sites = SamplingSite.all
+      sampling_sites.each do |sampling_site|
+        sampling_site.position = params['ids'].index(sampling_site.id.to_s) + 1 if params['ids'].index(sampling_site.id.to_s) 
+        sampling_site.save
+      end
+      message << "sort ak"
+    else
+      message <<  ('unknown action')
+    end
+    
+    unless (sampling_site && sampling_site.errors).blank?  
+      sampling_site.errors.entries.each do |error|
+        message << "<strong>#{SamplingSite.human_attribute_name(error[0])}</strong> : #{error[1]}<br/>"
+      end
+      render :json =>[false,message]
+    else
+      render :json => [true,message] 
+    end
+  end
+
+
   def index
-    @sampling_sites = SamplingSite.all
+    #@sampling_sites = SamplingSite.all
     @title = "Sampling sites"
+    
+
     #@wu = WaterUse.find(@sampling_site.water_uses_id)
     #@wt = WaterType.find(@sampling_site.water_types_id)
     #@lum = LandUseMapping.find(@sampling_site.land_use_mappings_id)
     #@g = Geo.find(@sampling_site.geos_id)
-
     #sampling_sites = SamplingSite.find(:all, :joins => [:water_use, :water_type, :geo, :land_use_mapping]) do
     #sampling_sites = SamplingSite.find(:all, :joins => [:geo]) do
 #Mysql::Error: Unknown column 'sampling_sites.geo_id' in 'on clause': SELECT `sampling_sites`.* FROM `sampling_sites` INNER JOIN `geos` ON `geos`.id = `sampling_sites`.geo_id LIMIT 0, 20
     #water_types_id water_uses_id land_use_mappings_id geos_id
-    sampling_sites = SamplingSite.find(:all) do
-    #@sampling_sites do --> Kappao
-        if params[:_search] == "true"
-            code =~ "%#{params[:code]}%" if params[:code].present?
-            name =~ "%#{params[:name]}%" if params[:name].present?
-            water_type.name =~ "%#{params[:w_type_name]}%" if params[:w_type_name].present?
-            water_use.name =~ "%#{params[:w_use_name]}%" if params[:w_use_name].present?
-            land_use_mapping.name =~ "%#{params[:land_name]}%" if params[:land_name].present?
-            geo.name =~ "%#{params[:geo_name]}%" if params[:geo_name].present?
-        end
-        paginate :page => params[:page], :per_page => params[:rows]
-        #for sort use join condition. Not requires by search because of reflection model
-        if params[:sidx] == "w_use_name"
-            order_by "water_uses.name #{params[:sord]}"
-        elsif params[:sidx] == "w_type_name"
-            order_by "water_types.code #{params[:sord]}"
-        elsif params[:sidx] == "land_name"
-            order_by "land_use_mappings.name #{params[:sord]}"
-        elsif params[:sidx] == "geo_name"
-            order_by "geos.name #{params[:sord]}"
-        else
-            order_by "#{params[:sidx]} #{params[:sord]}"
-        end
+    
+   #sampling_sites = SamplingSite.find(:all) do
+   #     if params[:_search] == "true"
+   #         code =~ "%#{params[:code]}%" if params[:code].present?
+   #         name =~ "%#{params[:name]}%" if params[:name].present?
+   #         water_type.name =~ "%#{params[:w_type_name]}%" if params[:w_type_name].present?
+   #        water_use.name =~ "%#{params[:w_use_name]}%" if params[:w_use_name].present?
+   #         land_use_mapping.name =~ "%#{params[:land_name]}%" if params[:land_name].present?
+   #         geo.name =~ "%#{params[:geo_name]}%" if params[:geo_name].present?
+   #     end
+   #     paginate :page => params[:page], :per_page => params[:rows]
+   #     #for sort use join condition. Not requires by search because of reflection model
+   #     if params[:sidx] == "w_use_name"
+   #         order_by "water_uses.name #{params[:sord]}"
+   #     elsif params[:sidx] == "w_type_name"
+   #         order_by "water_types.code #{params[:sord]}"
+   #     elsif params[:sidx] == "land_name"
+   #         order_by "land_use_mappings.name #{params[:sord]}"
+   #     elsif params[:sidx] == "geo_name"
+   #         order_by "geos.name #{params[:sord]}"
+   #     else
+   #         order_by "#{params[:sidx]} #{params[:sord]}"
+   #     end
+   #end
+
+    #respond_to do |format|
+    #    format.html # index.html.erb
+        #format.xml { render :xml => @sampling_sites }
+    #    format.json { render :json => sampling_sites.to_jqgrid_json(
+    #        [:id, "act",:code,:name,:w_use_name,:w_type_name,"land_name","geo_name","edit"],
+    #        params[:page], params[:rows], sampling_sites.total_entries) }	
+    #end
+
+
+    index_columns ||= [:id, "act",:code,:name,:w_use_name,:w_type_name,"land_name","geo_name","edit"]
+    current_page = params[:page] ? params[:page].to_i : 1
+    rows_per_page = params[:rows] ? params[:rows].to_i : 10
+
+    conditions={:page => current_page, :per_page => rows_per_page}
+    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+    
+    if params[:_search] == "true"
+      conditions[:conditions]=filter_by_conditions(index_columns)
     end
+    
+    @sampling_sites=SamplingSite.paginate(conditions)
+    total_entries=@sampling_sites.total_entries
 
-# <td><%=h WaterUse.find(sampling_site.water_uses_id).name %></td>
-# <td><%=h WaterType.find(sampling_site.water_types_id).name %></td>
-# <td><%=h LandUseMapping.find(sampling_site.land_use_mappings_id).name %></td>
-# <td><%=h Geo.find(sampling_site.geos_id).name %></td>
-
+    @sites = SamplingSite.all
     @map = GMap.new("map_div_id")
     @map.control_init(:large_map => true, :map_type => true)
     @map.center_zoom_init([46.95, 7.416667], 4) #Berne Suisse
      
-    for ss in @sampling_sites
+    for ss in @sites
         g = ss.geo
         g = Geo.find(ss.geo_id) #undefined method `lat' for nil:NilClass
         marker = GMarker.new([g.lat, g.lon],
           :title => g.name, :info_window => g.verbose_me)
         @map.overlay_init(marker)
-    end
 
-    respond_to do |format|
-        format.html # index.html.erb
-        #format.xml { render :xml => @sampling_sites }
-        format.json { render :json => sampling_sites.to_jqgrid_json(
-            [:id, "act",:code,:name,:w_use_name,:w_type_name,"land_name","geo_name","edit"],
-            params[:page], params[:rows], sampling_sites.total_entries) }	
+      ########IMPORTANT##########################################################################  
+	#the plugin was made for is now deprecated google maps v2 API
+	#the to_html function of the plugin is a bit off in the sense that the init variables for the
+        #html variables is an array of variables - which are being joined by a string.         
+		#add below in the index.html.erb file in the header
+		#<%= GMap.header %>
+		#add below 2 in the index.html.erb file in the footer
+		#<%= @map.to_html %>
+		#<%= @map.div(:width => 600, :height => 400) %>
+	#for rails 3: https://github.com/guilleiguaran/ym4r_gm
+      ########IMPORTANT##########################################################################
+
     end
+    
+    respond_with(@sampling_sites) do |format|
+      format.json { render :json => @sampling_sites.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+    end
+  
+
   end
-#{ :field => "water_uses_id", :label => "Water use", :edittype => "select", :editoptions => { :data => [WaterUse.all, :id, :name] } },
 
-
-# def post_data
-# if params[:oper] == "del"
-# User.find(params[:id]).destroy
-# else
-# user_params = { :pseudo => params[:pseudo], :firstname => params[:firstname], :lastname => params[:lastname],
-# :email => params[:email], :role => params[:role] }
-# if params[:id] == "_empty"
-# User.create(user_params)
-# else
-# User.find(params[:id]).update_attributes(user_params)
-# end
-# end
-# render :nothing => true
-# end
 
   # GET /sampling_sites/1
   # GET /sampling_sites/1.xml

@@ -18,18 +18,17 @@
 
 <script type="text/javascript" >
      function handleSelection(id) {
-        <%= remote_function (:url => {:controller=> 'sampling_sites',
-                     :action => 'show'},
-                     :with => "id= " + String(id))
-        %>
+        <%= remote_function(:url => {:controller=> 'sampling_sites',
+                     :action => 'show'}) %>
      }
+//,:with => "id= " + String(id)
 //use, :selection_handler => "handleSelection", :direct_selection => true
 //use, :grid_complete => "grid_complete" 
 //, :hidden => true
 </script>
 
 
-<%= jqgrid("List of filter samples: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", filter_samples_path,
+<%=raw jqgrid("List of filter samples: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", "/filter_samples",
 	[
 		{ :field => "id", :label => "ID", :width => 35, :resizable => false, :sortable => false, :editable => false, :hidden => true}, 
         { :field => "act", :label => "", :width => 35 , :resizable => false, :search => false, :sortable => false },
@@ -41,7 +40,8 @@
 		{ :field => "volume", :label => "Volume (lt)", :width => 70, :class => "taright" },
 		{ :field => "edit_link", :label => "edit", :sortable => false, :width => 35 , :resizable => false, :search => false},
 	], 
-    {   :add => false, 
+    {   :autowidth => true,
+        :add => false, 
         :edit => false, 
         :inline_edit => false, 
         :delete => false, 

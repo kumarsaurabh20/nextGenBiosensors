@@ -25,7 +25,7 @@
 </table>
 <br />
 
-<%= jqgrid("List of Microarray experiments: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", experiments_path,
+<%=raw jqgrid("List of Microarray experiments: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", "/experiments",
 	[
 	{ :field => "id", :label => "ID", :width => 60, :resizable => false, :sortable => false, :editable => false, :hidden => true},
         { :field => "act", :label => "", :width => 30 , :resizable => false, :sortable => false, :search => false, :resizable => true },
@@ -36,10 +36,11 @@
         { :field => "gpr_code", :label => "GPR code", :search => true, :sortable => true, :editable => false, :width => 250, :resizable => true, :align => 'center' },
         { :field => "exp_date", :label => "Exp. date", :search => true, :sortable => true, :editable => false, :width => 100, :resizable => true, :align => 'center' },
         { :field => "mi_image", :label => "Image", :search => false, :sortable => true, :editable => false, :width => 65, :align => 'center' },
-        { :field => "check", :label => "Select", :width => 40 , :resizable => true, :sortable => false, :search => false, :formatter => 'checkbox', :formatoptions => { :disabled => false }, :searchoptions => { :value => "Yes:No" } , :editable => true, :edittype => 'checkbox', :editoptions => { :value => "No" }, :align => 'center' },
+        { :field => "check", :label => "Select", :width => 40 , :resizable => true, :sortable => false, :search => false, :formatter => 'checkbox', :formatoptions => { :disabled => false }, :editable => true, :edittype => 'checkbox', :align => 'center' },
 	{ :field => "edit", :label => "Edit", :search => false, :sortable => false, :width => 30 , :resizable => true}
          ], 
-    {   :add => false, 
+    {   :autowidth => true,
+        :add => false, 
         :edit => true, 
         :inline_edit => true, 
         :delete => true, 
@@ -78,17 +79,7 @@
 
 <script type="text/javascript" >
 
-//jQuery('#ngbgrid').navGrid()
-                        .navButtonAdd('ngbgrid',{
-                         caption:"Analyze", 
-                         buttonicon:"ui-icon-newwin", 
-                         onClickButton:null, 
-                         position: "last", 
-                         title:"", 
-                         cursor: "Analyze the checked dataset"});
 </script>
-
-
 
 
 

@@ -1,15 +1,16 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130927104846) do
+ActiveRecord::Schema.define(:version => 20131113173224) do
 
   create_table "altitude_types", :force => true do |t|
     t.string   "name",        :null => false
@@ -77,6 +78,69 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
     t.datetime "updated_at"
   end
 
+  create_table "data_gprs", :force => true do |t|
+    t.integer  "microarraygpr_id"
+    t.integer  "gpr_header_id"
+    t.integer  "gal_block_id"
+    t.string   "oligo_row"
+    t.string   "oligo_column"
+    t.string   "oligo_id"
+    t.string   "oligo_name"
+    t.string   "x"
+    t.string   "y"
+    t.string   "dia"
+    t.string   "f635_median"
+    t.string   "f635_mean"
+    t.string   "f635_sd"
+    t.string   "f635_cv"
+    t.string   "b635"
+    t.string   "b635_Median"
+    t.string   "b635_mean"
+    t.string   "b635_sd"
+    t.string   "b635_cv"
+    t.string   "percent_b635_1_sd"
+    t.string   "percent_b635_2_sd"
+    t.string   "f635_perc_sat"
+    t.string   "f532_median"
+    t.string   "f532_mean"
+    t.string   "f532_sd"
+    t.string   "f532_cv"
+    t.string   "b532"
+    t.string   "b532_median"
+    t.string   "b532_mean"
+    t.string   "b532_sd"
+    t.string   "b532_cv"
+    t.string   "percent_b532_1_sd"
+    t.string   "percent_b532_2_sd"
+    t.string   "f532_perc_sat"
+    t.string   "ratio_of_medians"
+    t.string   "ratio_of_means"
+    t.string   "median_of_ratios"
+    t.string   "mean_of_ratios"
+    t.string   "ratios_sd"
+    t.string   "rgn_ratio"
+    t.string   "rgn_r2"
+    t.string   "f_pixels"
+    t.string   "b_pixels"
+    t.string   "circularity"
+    t.string   "sum_of_medians"
+    t.string   "sum_of_means"
+    t.string   "log_ratio"
+    t.string   "f635_median_minus_b635"
+    t.string   "f532_median_minus_b635"
+    t.string   "f635_mean_minus_b635"
+    t.string   "f532_mean_minus_b635"
+    t.string   "f635_total_intensity"
+    t.string   "f532_total_intensity"
+    t.string   "snr_635"
+    t.string   "snr_532"
+    t.string   "flags"
+    t.string   "normalize"
+    t.string   "autoflag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "depths", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -112,15 +176,15 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
   end
 
   create_table "filter_samples", :force => true do |t|
-    t.integer  "sampling_id",                                                                               :null => false
-    t.datetime "samplingDate",                                                                              :null => false
+    t.integer  "sampling_id",                                                                  :null => false
+    t.datetime "samplingDate",                                                                 :null => false
     t.integer  "partner_id"
-    t.integer  "wfilter_id",                                                                                :null => false
-    t.decimal  "pore_size",                                  :precision => 5, :scale => 3, :default => 0.0
-    t.integer  "num_filters",                   :limit => 2, :precision => 2, :scale => 0, :default => 0
-    t.decimal  "avg_qta",                                    :precision => 4, :scale => 2, :default => 0.0
-    t.decimal  "volume",                                     :precision => 4, :scale => 2,                  :null => false
-    t.string   "barcode",                                                                                   :null => false
+    t.integer  "wfilter_id",                                                                   :null => false
+    t.decimal  "pore_size",                     :precision => 5, :scale => 3, :default => 0.0
+    t.decimal  "num_filters",                   :precision => 2, :scale => 0, :default => 0
+    t.decimal  "avg_qta",                       :precision => 4, :scale => 2, :default => 0.0
+    t.decimal  "volume",                        :precision => 4, :scale => 2,                  :null => false
+    t.string   "barcode",                                                                      :null => false
     t.string   "code"
     t.text     "note"
     t.datetime "created_at"
@@ -668,9 +732,9 @@ ActiveRecord::Schema.define(:version => 20130927104846) do
   end
 
   create_table "wfilters", :force => true do |t|
-    t.string   "name",                                                   :default => ""
-    t.decimal  "pore_size",                :precision => 5, :scale => 3, :default => 0.0
-    t.integer  "num_filters", :limit => 2, :precision => 2, :scale => 0, :default => 0
+    t.string   "name",                                      :default => ""
+    t.decimal  "pore_size",   :precision => 5, :scale => 3, :default => 0.0
+    t.decimal  "num_filters", :precision => 2, :scale => 0, :default => 0
     t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"

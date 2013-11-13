@@ -1,5 +1,18 @@
-class MicroarraygalsController < ApplicationController
+class MicroarraygalsController < AuthController
   
+
+  respond_to :html,:json
+  
+  protect_from_forgery :except => [:post_data]
+  
+  # Don't forget to edit routes if you're using RESTful routing
+  # 
+  #resources :microarraygals,:only => [:index] do
+  #   collection do
+  #     post "post_data"
+  #   end
+  # end
+
   class UnknownTypeError < StandardError
   end
   
@@ -7,11 +20,48 @@ class MicroarraygalsController < ApplicationController
   before_filter :correct_user, :only => [:edit, :update] #, :download_csv]
   after_filter :extractFile, :only => [:create]
 
+  def post_data
+    message=""
+    microarraygal_params = { :id => params[:id],:gal_title => params[:gal_title],:gal_file_title => params[:gal_file_title],:gal_file => params[:gal_file],:code => params[:code],:barcode => params[:barcode],:partner_id => params[:partner_id],:note => params[:note],:loaded_at => params[:loaded_at] }
+    case params[:oper]
+    when 'add'
+      if params["id"] == "_empty"
+        microarraygal = Microarraygal.create(microarraygal_params)
+        message << ('add ok') if microarraygal.errors.empty?
+      end
+      
+    when 'edit'
+      microarraygal = Microarraygal.find(params[:id])
+      message << ('update ok') if microarraygal.update_attributes(microarraygal_params)
+    when 'del'
+      Microarraygal.destroy_all(:id => params[:id].split(","))
+      message <<  ('del ok')
+    when 'sort'
+      microarraygals = Microarraygal.all
+      microarraygals.each do |microarraygal|
+        microarraygal.position = params['ids'].index(microarraygal.id.to_s) + 1 if params['ids'].index(microarraygal.id.to_s) 
+        microarraygal.save
+      end
+      message << "sort ak"
+    else
+      message <<  ('unknown action')
+    end
+    
+    unless (microarraygal && microarraygal.errors).blank?  
+      microarraygal.errors.entries.each do |error|
+        message << "<strong>#{Microarraygal.human_attribute_name(error[0])}</strong> : #{error[1]}<br/>"
+      end
+      render :json =>[false,message]
+    else
+      render :json => [true,message] 
+    end
+  end
+
 
   # GET /microarraygals
   # GET /microarraygals.xml
   def index
-    @microarraygals = Microarraygal.all
+    #@microarraygals = Microarraygal.all
     @title = "List of micro arrays GAL files"
 
     if !signed_in?
@@ -19,22 +69,41 @@ class MicroarraygalsController < ApplicationController
 	       redirect_to experiments_path
     else
 
-	    microarraygals = Microarraygal.find(:all, :joins=>[:partner]) do
-		#if params[:_search] == "true"
-
-	       # end
-		paginate :page => params[:page], :per_page => params[:rows]      
-	     
-	     end
-
-	    respond_to do |format|
-		format.html # index.html.erbs directly,
-		#format.xml  { render :xml => @samplings }
-	 format.json { render :json => microarraygals.to_jqgrid_json([:id,"act","gal_f_code","partner_name","title","bcode","gal_upload_date","edit"], params[:page], params[:rows], microarraygals.total_entries) }			
-	    end
+     #	    microarraygals = Microarraygal.find(:all, :joins=>[:partner]) do
+     #		#if params[:_search] == "true"
+     #
+     #	       # end
+	#	paginate :page => params[:page], :per_page => params[:rows]      
+	#    
+	#     end
+        #
+	#    respond_to do |format|
+	#	format.html # index.html.erbs directly,
+	#	#format.xml  { render :xml => @samplings }
+	# format.json { render :json => microarraygals.to_jqgrid_json([:id,"act","gal_f_code","partner_name","title","bcode","gal_upload_date","edit"], params[:page], params[:rows], microarraygals.total_entries) }			
+	#    end
      
      
+   index_columns ||= [:id,"act","gal_f_code","partner_name","title","bcode","gal_upload_date","edit"]
+    current_page = params[:page] ? params[:page].to_i : 1
+    rows_per_page = params[:rows] ? params[:rows].to_i : 10
+
+    conditions={:page => current_page, :per_page => rows_per_page}
+    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+    
+    if params[:_search] == "true"
+      conditions[:conditions]=filter_by_conditions(index_columns)
     end
+    
+    @microarraygals=Microarraygal.paginate(conditions)
+    total_entries=@microarraygals.total_entries
+    
+    respond_with(@microarraygals) do |format|
+      format.json { render :json => @microarraygals.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+    end
+
+   end
+
  end
 
   # GET /microarraygals/1

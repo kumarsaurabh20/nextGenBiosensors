@@ -1,9 +1,60 @@
-class MicroArrayImagesController < ApplicationController
+class MicroArrayImagesController < AuthController
+
+  respond_to :html,:json
+  
+  protect_from_forgery :except => [:post_data]
+  
+  # Don't forget to edit routes if you're using RESTful routing
+  # 
+  #resources :micro_array_images,:only => [:index] do
+  #   collection do
+  #     post "post_data"
+  #   end
+  # end
 
   include SessionsHelper
 
   #only Requiring the right user to change own contents
   before_filter :correct_user, :only => [:edit, :update]
+
+
+  def post_data
+    message=""
+    micro_array_image_params = { :id => params[:id],:note => params[:note],:name => params[:name],:image => params[:image],:II_ImageID => params[:II_ImageID],:II_Channel => params[:II_Channel],:II_Image => params[:II_Image],:II_Fluorophore => params[:II_Fluorophore],:barcode => params[:barcode],:II_Units => params[:II_Units],:II_X_Units_Per_Pixel => params[:II_X_Units_Per_Pixel],:II_Y_Units_Per_Pixel => params[:II_Y_Units_Per_Pixel],:II_X_Offset => params[:II_X_Offset],:II_Y_Offset => params[:II_Y_Offset],:II_Status => params[:II_Status],:created_at => params[:created_at],:updated_at => params[:updated_at],:icode => params[:icode],:partner_id => params[:partner_id] }
+    case params[:oper]
+    when 'add'
+      if params["id"] == "_empty"
+        micro_array_image = MicroArrayImage.create(micro_array_image_params)
+        message << ('add ok') if micro_array_image.errors.empty?
+      end
+      
+    when 'edit'
+      micro_array_image = MicroArrayImage.find(params[:id])
+      message << ('update ok') if micro_array_image.update_attributes(micro_array_image_params)
+    when 'del'
+      MicroArrayImage.destroy_all(:id => params[:id].split(","))
+      message <<  ('del ok')
+    when 'sort'
+      micro_array_images = MicroArrayImage.all
+      micro_array_images.each do |micro_array_image|
+        micro_array_image.position = params['ids'].index(micro_array_image.id.to_s) + 1 if params['ids'].index(micro_array_image.id.to_s) 
+        micro_array_image.save
+      end
+      message << "sort ak"
+    else
+      message <<  ('unknown action')
+    end
+    
+    unless (micro_array_image && micro_array_image.errors).blank?  
+      micro_array_image.errors.entries.each do |error|
+        message << "<strong>#{MicroArrayImage.human_attribute_name(error[0])}</strong> : #{error[1]}<br/>"
+      end
+      render :json =>[false,message]
+    else
+      render :json => [true,message] 
+    end
+  end
+
 
   # GET /micro_array_images
   # GET /micro_array_images.xml
@@ -17,19 +68,39 @@ class MicroArrayImagesController < ApplicationController
 	       redirect_to experiments_path
     else
 
-	    micro_array_images = MicroArrayImage.find(:all, :joins=>[:partner]) do
-		#if params[:_search] == "true"
+#	    micro_array_images = MicroArrayImage.find(:all, :joins=>[:partner]) do
+#		#if params[:_search] == "true"
+#
+#	       # end
+#		paginate :page => params[:page], :per_page => params[:rows]      
+#	     
+#	     end
+#
+#	    respond_to do |format|
+#		format.html # index.html.erbs directly,
+#		#format.xml  { render :xml => @samplings }
+#		format.json { render :json => micro_array_images.to_jqgrid_json([:id,"act","image_code",:name,:II_ImageID,:II_Channel,:II_Status,"image_date","edit"], params[:page], params[:rows], micro_array_images.total_entries) }			
+#	    end
 
-	       # end
-		paginate :page => params[:page], :per_page => params[:rows]      
-	     
-	     end
 
-	    respond_to do |format|
-		format.html # index.html.erbs directly,
-		#format.xml  { render :xml => @samplings }
-		format.json { render :json => micro_array_images.to_jqgrid_json([:id,"act","image_code",:name,:II_ImageID,:II_Channel,:II_Status,"image_date","edit"], params[:page], params[:rows], micro_array_images.total_entries) }			
-	    end
+  index_columns ||= [:id,"act","image_code",:name,:II_ImageID,:II_Channel,:II_Status,"image_date","edit"]
+    current_page = params[:page] ? params[:page].to_i : 1
+    rows_per_page = params[:rows] ? params[:rows].to_i : 10
+
+    conditions={:page => current_page, :per_page => rows_per_page}
+    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+    
+    if params[:_search] == "true"
+      conditions[:conditions]=filter_by_conditions(index_columns)
+    end
+    
+    @micro_array_images=MicroArrayImage.paginate(conditions)
+    total_entries=@micro_array_images.total_entries
+    
+    respond_with(@micro_array_images) do |format|
+      format.json { render :json => @micro_array_images.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+      end
+
     end
   end
 

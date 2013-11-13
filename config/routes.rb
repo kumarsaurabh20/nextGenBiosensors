@@ -1,11 +1,12 @@
 NextGenBiosensors::Application.routes.draw do
 
- resources :batch_images
+  resources :data_gprs
+  resources :batch_images
   resources :batch_samplings
   resources :batch_oligos
   resources :microarraygprs
   resources :gpr_headers
-  resources :gpr_datas
+  resources :gpr_data
   resources :nucleic_acids
   resources :nucleic_acid_types
   resources :filter_sample_preparations

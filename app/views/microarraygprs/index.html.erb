@@ -14,7 +14,7 @@
    <tr class="taleft" width="70%"><td class="taleft">
     <ul class="navigation round taleft">
       <li><%= link_to "GPR file header", gpr_headers_path %></li>
-      <li><%= link_to "GPR results", gpr_datas_path %></li>
+      <li><%= link_to "GPR results", data_gprs_path %></li>
   </td></tr>
 </table>
 
@@ -29,15 +29,16 @@
 
      function handleSelection(id) {
         <%= remote_function(:url => {:controller=> 'microarraygals',
-                     :action => 'show'},
-                     :with => "id= " + String(id))
+                     :action => 'show'})
         %>
      }
+
+//,:with => "id= " + String(id)
 //use, :selection_handler => "handleSelection", :direct_selection => true
 //use, :grid_complete => "grid_complete" 
 </script>
 
-<%= jqgrid("List of .gpr files: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", microarraygprs_path,
+<%=raw jqgrid("List of .gpr files: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", microarraygprs_path,
 	[
 	{ :field => "id", :label => "ID", :width => 50, :resizable => false, :sortable => false, :editable => false, :hidden => true},
         { :field => "act", :label => "", :width => 50 , :resizable => false, :sortable => false, :search => false },
@@ -49,7 +50,8 @@
                 { :field => "gpr_upload_date", :label => "Upload date", :search => false, :width => 100, :sortable => false  },	
 	{ :field => "edit_link", :label => "edit", :search => false, :sortable => false, :width => 50 , :resizable => false}
 	], 
-    {   :add => false, 
+    {   :autowidth => true, 
+        :add => false, 
         :edit => false, 
         :inline_edit => false, 
         :delete => false, 

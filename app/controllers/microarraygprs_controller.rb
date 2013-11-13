@@ -1,5 +1,16 @@
-class MicroarraygprsController < ApplicationController
+class MicroarraygprsController < AuthController
 
+ respond_to :html,:json
+  
+  protect_from_forgery :except => [:post_data]
+  
+  # Don't forget to edit routes if you're using RESTful routing
+  # 
+  #resources :microarraygprs,:only => [:index] do
+  #   collection do
+  #     post "post_data"
+  #   end
+  # end
 
   class UnknownTypeError < StandardError
   end
@@ -7,6 +18,45 @@ class MicroarraygprsController < ApplicationController
   #only Requiring the right user to change own contents
   before_filter :correct_user, :only => [:edit, :update] #, :download_csv]
   after_filter :extractFile, :only => [:create]
+
+
+  def post_data
+    message=""
+    microarraygpr_params = { :id => params[:id],:gpr_title => params[:gpr_title],:gpr_file_title => params[:gpr_file_title],:gpr_file => params[:gpr_file],:code => params[:code],:loaded_at => params[:loaded_at],:barcode => params[:barcode],:partner_id => params[:partner_id],:note => params[:note] }
+    case params[:oper]
+    when 'add'
+      if params["id"] == "_empty"
+        microarraygpr = Microarraygpr.create(microarraygpr_params)
+        message << ('add ok') if microarraygpr.errors.empty?
+      end
+      
+    when 'edit'
+      microarraygpr = Microarraygpr.find(params[:id])
+      message << ('update ok') if microarraygpr.update_attributes(microarraygpr_params)
+    when 'del'
+      Microarraygpr.destroy_all(:id => params[:id].split(","))
+      message <<  ('del ok')
+    when 'sort'
+      microarraygprs = Microarraygpr.all
+      microarraygprs.each do |microarraygpr|
+        microarraygpr.position = params['ids'].index(microarraygpr.id.to_s) + 1 if params['ids'].index(microarraygpr.id.to_s) 
+        microarraygpr.save
+      end
+      message << "sort ak"
+    else
+      message <<  ('unknown action')
+    end
+    
+    unless (microarraygpr && microarraygpr.errors).blank?  
+      microarraygpr.errors.entries.each do |error|
+        message << "<strong>#{Microarraygpr.human_attribute_name(error[0])}</strong> : #{error[1]}<br/>"
+      end
+      render :json =>[false,message]
+    else
+      render :json => [true,message] 
+    end
+  end
+  
 
   # GET /microarraygprs
   # GET /microarraygprs.xml
@@ -19,21 +69,40 @@ class MicroarraygprsController < ApplicationController
 	       redirect_to experiments_path
     else
 
-	    microarraygprs = Microarraygpr.find(:all, :joins=>[:partner]) do
-		#if params[:_search] == "true"
+#	    microarraygprs = Microarraygpr.find(:all, :joins=>[:partner]) do
+#		#if params[:_search] == "true"
+#
+#	       # end
+#		paginate :page => params[:page], :per_page => params[:rows]      
+#	     
+#	     end
+#
+#	    respond_to do |format|
+#		format.html # index.html.erbs directly,
+#		
+#	 format.json { render :json => microarraygprs.to_jqgrid_json([:id,"act","gpr_code","partner_name","title","bcode","gpr_upload_date","edit"], params[:page], params[:rows], microarraygprs.total_entries) }			
+#	    end
 
-	       # end
-		paginate :page => params[:page], :per_page => params[:rows]      
-	     
-	     end
+    index_columns ||= [:id,"act","gpr_code","partner_name","title","bcode","gpr_upload_date","edit"]
+    current_page = params[:page] ? params[:page].to_i : 1
+    rows_per_page = params[:rows] ? params[:rows].to_i : 10
 
-	    respond_to do |format|
-		format.html # index.html.erbs directly,
-		
-	 format.json { render :json => microarraygprs.to_jqgrid_json([:id,"act","gpr_code","partner_name","title","bcode","gpr_upload_date","edit"], params[:page], params[:rows], microarraygprs.total_entries) }			
-	    end
-
+    conditions={:page => current_page, :per_page => rows_per_page}
+    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+    
+    if params[:_search] == "true"
+      conditions[:conditions]=filter_by_conditions(index_columns)
     end
+    
+    @microarraygprs=Microarraygpr.paginate(conditions)
+    total_entries=@microarraygprs.total_entries
+    
+    respond_with(@microarraygprs) do |format|
+      format.json { render :json => @microarraygprs.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+     end
+
+   end
+
   end
 
   # GET /microarraygprs/1

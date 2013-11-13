@@ -24,15 +24,15 @@
 
      function handleSelection(id) {
         <%= remote_function(:url => {:controller=> 'micro_array_images',
-                     :action => 'show'},
-                     :with => "id= " + String(id))
+                     :action => 'show'})
         %>
      }
+//,:with => "id= " + String(id)
 //use, :selection_handler => "handleSelection", :direct_selection => true
 //use, :grid_complete => "grid_complete" 
 </script>
 
-<%= jqgrid("List of microarray image files: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", micro_array_images_path,
+<%=raw jqgrid("List of microarray image files: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", micro_array_images_path,
 	[
 	{ :field => "id", :label => "ID", :width => 50, :resizable => false, :sortable => false, :editable => false, :hidden => true},
         { :field => "act", :label => "Details", :width => 50 , :resizable => false, :sortable => false, :search => false },
@@ -45,7 +45,8 @@
         { :field => "edit_link", :label => "edit", :search => false, :sortable => false, :width => 50 , :resizable => false}
         
 	], 
-    {   :add => false, 
+    {   :autowidth => true,
+        :add => false, 
         :edit => false, 
         :inline_edit => false, 
         :delete => false, 

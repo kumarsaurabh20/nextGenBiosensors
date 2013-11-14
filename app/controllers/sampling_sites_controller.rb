@@ -123,28 +123,20 @@ class SamplingSitesController < AuthController
     total_entries=@sampling_sites.total_entries
 
     @sites = SamplingSite.all
-    @map = GMap.new("map_div_id")
-    @map.control_init(:large_map => true, :map_type => true)
-    @map.center_zoom_init([46.95, 7.416667], 4) #Berne Suisse
+    @map = GMap.new("map_div") 
+    @map.control_init(:large_map => true,:map_type => true) 
+    @map.center_zoom_init([46.95, 7.416667],4) 
+    @map.overlay_init(GMarker.new([75.6,-42.467],:title => "Hello", :info_window => "Info! Info!")) 
+
+
+    @sites = SamplingSite.all
+    
      
     for ss in @sites
-        g = ss.geo
-        g = Geo.find(ss.geo_id) #undefined method `lat' for nil:NilClass
-        marker = GMarker.new([g.lat, g.lon],
-          :title => g.name, :info_window => g.verbose_me)
+        #g = ss.geo
+        g = Geo.find(ss.geo_id) 
+        marker = GMarker.new([g.lat, g.lon],:title => g.name, :info_window => g.verbose_me)
         @map.overlay_init(marker)
-
-      ########IMPORTANT##########################################################################  
-	#the plugin was made for is now deprecated google maps v2 API
-	#the to_html function of the plugin is a bit off in the sense that the init variables for the
-        #html variables is an array of variables - which are being joined by a string.         
-		#add below in the index.html.erb file in the header
-		#<%= GMap.header %>
-		#add below 2 in the index.html.erb file in the footer
-		#<%= @map.to_html %>
-		#<%= @map.div(:width => 600, :height => 400) %>
-	#for rails 3: https://github.com/guilleiguaran/ym4r_gm
-      ########IMPORTANT##########################################################################
 
     end
     

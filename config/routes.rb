@@ -30,7 +30,7 @@ NextGenBiosensors::Application.routes.draw do
   resources :names
   resources :oligo_sequences
   match '/lookforbio' => 'oligo_sequences#lookup', :as => :lookforbio
-  match '/searchforbio' => 'oligo_sequences#esearch', :as => :lookforbio
+  match '/searchforbio' => 'oligo_sequences#esearch', :as => :searchforbio
   resources :nodes
   resources :countries
   resources :wfilters

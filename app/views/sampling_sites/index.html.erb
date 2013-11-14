@@ -1,5 +1,6 @@
 <%= jqgrid_stylesheets %>
 <%= jqgrid_javascripts %>
+<%= raw(GMap.header) %>  
 
 <table>
 <tr class="taleft" width="70%"><td class="taleft">
@@ -18,10 +19,10 @@
 </table>
 
 <h1>Sampling sites</h1>
-<%= link_to 'New sampling site', new_sampling_site_path %>
+<br />
+<%= link_to 'Create new sampling site', new_sampling_site_path %>
 <br />
 <br />
-
 <script type="text/javascript" >
      function handleSelection(id) {
         <%= remote_function(:url => {:controller=> 'sampling_sites',
@@ -58,8 +59,9 @@
 
 <br />
 
-<%= link_to 'New sampling site', new_sampling_site_path %>
+<%= link_to 'Create new sampling site', new_sampling_site_path %>
 <br />
-<br />
+<%= raw(@map.to_html) %> 
+<%= raw(@map.div(:width => 1090, :height => 350)) %>
 
 

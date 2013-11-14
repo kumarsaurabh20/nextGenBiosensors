@@ -1,5 +1,5 @@
 <%= javascript_include_tag 'ym4r-gm.js' %>
-<%= GMap.header %>
+<%= raw(GMap.header) %> 
 
 <table>
 <tr class="taleft" width="70%"><td class="taleft">
@@ -89,10 +89,11 @@
 </div>
 
 </fieldset>
-
-<%= @map.to_html %>
-<%= @map.div(:width => 600, :height => 400) %>
+<%= raw(@map.to_html) %> 
+<%= raw(@map.div(:width => 1090, :height => 350)) %>
 <br />
 <%= link_to 'Edit', edit_sampling_site_path(@sampling_site) %> |
 <%= link_to 'Back', sampling_sites_path %>
+
+
 

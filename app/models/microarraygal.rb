@@ -1,7 +1,10 @@
 class Microarraygal < ActiveRecord::Base
 
-include ActionController::UrlWriter
- include ExperimentHelper
+#include ActionController::UrlWriter
+include Rails.application.routes.url_helpers
+include ExperimentHelper
+
+
 
   validates_presence_of :gal_title, :message => "Can't be empty, field is mandatory. "
   validates_presence_of :gal_file_title, :message => "Can't be empty, field is mandatory. "

@@ -4,6 +4,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery_migrate
+//= require_tree .
 
 
 /****************** jqGrid **********************************/

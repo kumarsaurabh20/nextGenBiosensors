@@ -25,15 +25,14 @@ class OligoSequencesController < AuthController
     logger.debug('esearch here')
    
     xsearch = params[:es]
-   
+    logger.debug xsearch.to_s
     if !xsearch.nil?
         if !xsearch.include?('[Subtree]')
             xsearch = xsearch + '[Subtree]'
         end
         begin
             @esearch2 = Bio::NCBI::REST::ESearch.taxonomy(xsearch, 'xml')
-            #<pre id="preName"><%= @esearch2 %></pre><br />
-            #<%= @esearch2 %>
+            
             respond_to do |format|
                 format.xml  { render :xml => @esearch2 }      
             end

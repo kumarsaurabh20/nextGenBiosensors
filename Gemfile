@@ -18,6 +18,8 @@ gem 'jrails'
 gem "will_paginate", "~> 3.0.4" 
 gem 'jquery-rails', '~> 2.1'
 
+gem 'rmagick', '2.13.2', :git=>'http://github.com/rmagick/rmagick.git'
+
 
 
 # Use unicorn as the web server

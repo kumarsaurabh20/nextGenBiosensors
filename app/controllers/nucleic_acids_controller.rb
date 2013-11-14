@@ -140,7 +140,7 @@ class NucleicAcidsController < AuthController  #ApplicationController
       @fs = FilterSample.all()
     else
 #      @fs = FilterSample.find :all, :joins => [:samplings, :partners], :conditions => ["decks.game_id = ? and cards.present = ?", @game.id, true]
-      @fs = FilterSample.find :all, :joins => [:sampling], :conditions => ["partner_id = ?", @pt.id]
+      @fs = FilterSample.find :all, :joins => [:sampling], :conditions => ["sampling_id = ?", @pt.id]
       #@fs = FilterSample.all(:conditions => [ "partner_id = ?", @pt.id])
     end
 #<%= select :nucleic_acid,:filter_sample_id, FilterSample.all.collect{|p| [p.verbose_me, p.id]}%>

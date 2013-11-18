@@ -138,7 +138,7 @@ respond_to :html,:json
     #        params[:page], params[:rows], filter_samples.total_entries) }			
     #end
 
-    index_columns ||= [:id, "act","code",:sample_name,"barcode","filter_name",:num_filters,:volume,"edit"]
+    index_columns ||= [:id, :act,:code,:sample_name, :barcode, :filter_name,:num_filters,:volume, :edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

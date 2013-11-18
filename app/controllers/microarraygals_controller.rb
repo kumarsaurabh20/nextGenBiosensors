@@ -84,7 +84,7 @@ class MicroarraygalsController < AuthController
 	#    end
      
      
-   index_columns ||= [:id,"act","gal_f_code","partner_name","title","bcode","gal_upload_date","edit"]
+   index_columns ||= [:id,:act,:gal_f_code,:partner_name,:title,:bcode,:gal_upload_date,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

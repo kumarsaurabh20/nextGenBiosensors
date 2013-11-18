@@ -83,7 +83,7 @@ class MicroArrayImagesController < AuthController
 #	    end
 
 
-  index_columns ||= [:id,"act","image_code",:name,:II_ImageID,:II_Channel,:II_Status,"image_date","edit"]
+  index_columns ||= [:id,:act,:image_code,:name,:II_ImageID,:II_Channel,:II_Status,:image_date,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

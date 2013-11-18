@@ -94,7 +94,7 @@ class NucleicAcidsController < AuthController  #ApplicationController
     #end
 
 
-  index_columns ||= [:id, "act", :code,"sampling_name","filter_sample_name",:nucleic_acid_type_name, "partner_name",:date, "edit"]
+  index_columns ||= [:id, :act, :code, :sampling_name, :filter_sample_name, :nucleic_acid_type_name, :partner_name, :date, :edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

@@ -135,7 +135,7 @@ class ExperimentsController < AuthController
 #	    end
 #    end
 
-index_columns ||= [:id,"act","exp_code","filter_name","gal_code","partner_name","gpr_code","exp_date","mi_image", :check, "edit"]
+index_columns ||= [:id,:act,:exp_code,:filter_name,:gal_code,:partner_name,:gpr_code,:exp_date,:mi_image, :check, :edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

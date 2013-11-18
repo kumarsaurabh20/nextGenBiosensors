@@ -94,10 +94,10 @@ class GprHeadersController < AuthController
 #    end
 
 
-  index_columns ||= [:id,"act",:microarraygpr_id,:gprVersion,:gprtype,:datetime,:settings,:pixelsize,:wavelengths, 
+  index_columns ||= [:id,:act,:microarraygpr_id,:gprVersion,:gprtype,:datetime,:settings,:pixelsize,:wavelengths, 
 :normalizationmethod,:normalizationfactors, :stddev, :ratioformulations,:featuretype, :barcode, :backgroundsubtraction, 
 :imageorigin, :jpegorigin, :creator, :scanner, :focusposition, :temp, :linesavg, :comment, :pmtgain, 
-:scanpower, :laserpower, :filters, :scanregion, :supplier, :created_at, "edit"]
+:scanpower, :laserpower, :filters, :scanregion, :supplier, :created_at, :edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

@@ -107,7 +107,7 @@ end
           @batch_oligos.assets.each do |index|
      
 		  file_name = index.fiolse_file_name
-		  directory = "/home/kumar/microaquadt/public/fiolses/"
+		  directory = "/home/jarvis/nextGenBiosensors/public/fiolses/"
 		       path = File.join(directory, file_name)
 		       str = IO.read(path)
 		       line = str.to_str	       
@@ -133,7 +133,7 @@ end
                         #@oligo_sequence.partner_id = $3.to_s
 
 		        ppl_code = $4
-                        @ppl = Person.find_by_firstname(ppl_code)
+                        @ppl = Person.find_by_lastname(ppl_code)
                         @oligo_sequence.people_id = @ppl.id
                         #@oligo_sequence.people_id = $4.to_s
 
@@ -151,7 +151,7 @@ end
         else 
                 
               file_name = @batch_oligos.assets.first.fiolse_file_name
-              directory = "/home/kumar/microaquadt/public/fiolses/"
+              directory = "/home/jarvis/nextGenBiosensors/public/fiolses/"
 		       path = File.join(directory, file_name)
 		       str = IO.read(path)
 		       line = str.to_str	       
@@ -177,7 +177,7 @@ if line =~ /(\w+)[\t,](\S+)[\t,](\w+)[\t,](\w+)[\t,](\w+[\s\w+]*)[\t,](\d+[-\/]\
                         #@oligo_sequence.partner_id = $3.to_s
 
 		        ppl_code = $4
-                        @ppl = Person.find_by_firstname(ppl_code)
+                        @ppl = Person.find_by_lastname(ppl_code)
                         @oligo_sequence.people_id = @ppl.id
                         #@oligo_sequence.people_id = $4.to_s
 

@@ -1,8 +1,15 @@
 class OligoSequencesController < AuthController 
 
-  require 'fastercsv'
+  require 'csv'
+  #require 'spreadsheet'
+  #require 'to_xls'
 
-  respond_to :html,:json
+ #The error TypeError: $.ajaxPrefilter is not a function in firebug will go by using following line but 
+ #Downloading selected oligos functionalities would not work after using the below lines.
+ #<%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" %>
+ #<%= javascript_include_tag "http://code.jquery.com/ui/1.8.19/jquery-ui.min.js" %>
+
+  respond_to :xls, :json, :html
   
   protect_from_forgery :except => [:post_data]
   #only Requiring the right user to change own contents
@@ -152,7 +159,7 @@ class OligoSequencesController < AuthController
     #oligo_sequences = OligoSequence.find(:all, :joins => [:person, :partner]) do
     #Mysql::Error: Unknown column 'oligo_sequences.person_id' in 'on clause': SELECT `oligo_sequences`.* FROM `oligo_sequences`   INNER JOIN `people` ON `people`.id = `oligo_sequences`.person_id  INNER JOIN `partners` ON `partners`.id = `oligo_sequences`.partner_id   LIMIT 0, 20
     #KAPPAO: migrate person generate people table but the rails do not re-construct right renaming
-    _str = ""
+#    _str = ""
    
 
    #oligo_sequences = OligoSequence.find(:all, :joins => [:partner]) do
@@ -202,7 +209,7 @@ class OligoSequencesController < AuthController
   #  end
 
 
-    index_columns ||= [:id, "act", :code, "verbose_me", "dna_ellipsis", "partner_name", "people_name", :taxonomy_name, :taxonomy_id, :available, "edit"]
+    index_columns ||= [:id, :act, :code, :verbose_me, :dna_ellipsis, :partner_name, :people_name, :taxonomy_name, :taxonomy_id, :available, :edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 
@@ -358,63 +365,48 @@ class OligoSequencesController < AuthController
     end
   end
 
-  def export_to_csv
-      
+  def export_to_csv      
     data = params['data'].split(',')
-    @oligos = OligoSequence.find(:all, :conditions => [ "id IN (?)", data])
-    
-    file = FasterCSV.generate do |line|
-    row1 = ["Selected oligo data exported on #{Time.now.strftime('%d/%m/%y-%H:%M')}"]
-    line << row1
-    row2 = ["ID","Details","PartnerCode","DNASequence","Date","Partner","Person","TaxName","TaxID"]
-    line << row2
-
-    @oligos.each do |entry|                
-    line << [entry.id, entry.description, entry.code, entry.dna_ellipsis, entry.oligoDate, entry.name, entry.people_name, entry.taxonomy_name, entry.taxonomy_id ]
-        end  
-
-    end
-     
-    send_data(file,
+    @oligos = OligoSequence.find(:all, :conditions => [ "id IN (?)", data])   
+    send_data(export_oligos(@oligos),
     :type => 'text/csv;charset=utf-8;header=present', 
     :disposition => 'attachment')
-
   end
 
   def export_all
-
     @oligos = OligoSequence.all
-
-    file = FasterCSV.generate do |line|
-    cols = ["ID","Details","PartnerCode","DNASequence","Date","Partner","Person","TaxName","TaxID"]
-    line << cols
-
-    @oligos.each do |entry|                
-    line << [entry.id, entry.description, entry.code, entry.dna_ellipsis, entry.oligoDate, entry.name, entry.people_name, entry.taxonomy_name, entry.taxonomy_id ]
-        end  
-
-    end
-    
-    send_data(file, 
+    send_data(export_oligos(@oligos), 
     :type => 'text/csv;charset=utf-8;header=present', 
     :disposition => "attachment;filename=Oligo_data_#{Time.now.strftime('%d%m%y-%H%M')}.csv")
-     
-
   end
 
   def export_all_xls
-
     @oligos = OligoSequence.all
-
-    respond_to do |format|
-	   format.xls { render :xls => @oligos }
-	end
-     
-
+    send_data(export_oligos(@oligos), 
+    :type => 'xls;charset=utf-8;header=present',
+    :disposition => "attachment;filename=All_oligo_data_#{Time.now.strftime('%d%m%y-%H%M')}.xls")
   end
 
 
   private
+
+    def export_oligos(obj)
+        file = CSV.generate do |line|
+        oligos = OligoSequence.all
+
+		if oligos.size == obj.size
+		   line << ["List of all oligos available in database"] 
+		else		   
+                   line << ["Selected oligo data exported on #{Time.now.strftime('%d/%m/%y-%H:%M')}"]
+		end
+        
+        line << ["ID","Details","PartnerCode","DNASequence","Date","Partner","Person","TaxName","TaxID"]
+        obj.each do |entry|                
+        line << [entry.id, entry.description, entry.code, entry.dna_ellipsis, entry.oligoDate, entry.name, entry.people_name, entry.taxonomy_name, entry.taxonomy_id ]
+         end 
+       end 
+      return file
+    end
 
     def correct_user
       @oligo = OligoSequence.find(params[:id])

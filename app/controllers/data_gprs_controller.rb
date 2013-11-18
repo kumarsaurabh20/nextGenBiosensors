@@ -72,14 +72,14 @@ class DataGprsController < AuthController
 #:f532_total_intensity,:snr_635,:snr_532,:flags,:normalize,:autoflag,"edit"], params[:page], params#[:rows], data_gprs.total_entries) }			
 #      end 
 
-  index_columns ||= [:id,"act","gpr_code","array_info",:x,:y,
+  index_columns ||= [:id,:act,:gpr_code,:array_info,:x,:y,
 :dia,:f635_median,:f635_mean,:f635_sd,:f635_cv,:b635,:b635_Median,:b635_mean,:b635_sd,:b635_cv,
 :percent_b635_1_sd,:percent_b635_2_sd,:f635_perc_sat,:f532_median,:f532_mean,:f532_sd,:f532_cv,:b532,
 :b532_median,:b532_mean,:b532_sd,:b532_cv,:percent_b532_1_sd,:percent_b532_2_sd,:f532_perc_sat,
 :ratio_of_medians,:ratio_of_means,:median_of_ratios,:mean_of_ratios,:ratios_sd,:rgn_ratio,:rgn_r2,
 :f_pixels,:b_pixels,:circularity,:sum_of_medians,:sum_of_means,:log_ratio,:f635_median_minus_b635,
 :f532_median_minus_b635,:f635_mean_minus_b635,:f532_mean_minus_b635,:f635_total_intensity,
-:f532_total_intensity,:snr_635,:snr_532,:flags,:normalize,:autoflag,"edit"]
+:f532_total_intensity,:snr_635,:snr_532,:flags,:normalize,:autoflag,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

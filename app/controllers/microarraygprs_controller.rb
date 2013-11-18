@@ -83,7 +83,7 @@ class MicroarraygprsController < AuthController
 #	 format.json { render :json => microarraygprs.to_jqgrid_json([:id,"act","gpr_code","partner_name","title","bcode","gpr_upload_date","edit"], params[:page], params[:rows], microarraygprs.total_entries) }			
 #	    end
 
-    index_columns ||= [:id,"act","gpr_code","partner_name","title","bcode","gpr_upload_date","edit"]
+    index_columns ||= [:id,:act,:gpr_code,:partner_name,:title,:bcode,:gpr_upload_date,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

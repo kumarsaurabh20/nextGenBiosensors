@@ -20,6 +20,8 @@ gem 'jquery-rails', '~> 2.1'
 
 gem 'rmagick', '2.13.2', :git=>'http://github.com/rmagick/rmagick.git'
 
+gem 'to_xls', '~> 1.0.0'
+
 
 
 # Use unicorn as the web server

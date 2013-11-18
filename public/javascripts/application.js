@@ -5,18 +5,3 @@
 //= require jquery_ujs
 //= require jquery_migrate
 //= require_tree .
-
-
-/****************** jqGrid **********************************/
-function grid_complete() {
-//try 
-  var ids = jQuery("#sites").jqGrid('getDataIDs');
-    for(var i=0;i < ids.length;i++) {
-      var cl = ids[i];
-      show = "Show"
-      jQuery("#sites").jqGrid('setRowData',ids[i],{ act: show }
-    );
-  }
-//catch err:
-//  alert(err); 
-} 

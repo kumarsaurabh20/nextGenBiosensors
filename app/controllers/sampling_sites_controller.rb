@@ -108,7 +108,7 @@ class SamplingSitesController < AuthController
     #end
 
 
-    index_columns ||= [:id, "act",:code,:name,:w_use_name,:w_type_name,"land_name","geo_name","edit"]
+    index_columns ||= [:id, :act, :code, :name, :w_use_name, :w_type_name, :land_name, :geo_name, :edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 
@@ -120,6 +120,7 @@ class SamplingSitesController < AuthController
     end
     
     @sampling_sites=SamplingSite.paginate(conditions)
+
     total_entries=@sampling_sites.total_entries
 
     @sites = SamplingSite.all

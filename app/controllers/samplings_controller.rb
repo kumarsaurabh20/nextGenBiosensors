@@ -97,7 +97,7 @@ class SamplingsController < AuthController
     #end
 
 
-    index_columns ||= [:id, "act",:code,:site_name,:volume,"partner_name", "sampling_equipment_name","edit"]
+    index_columns ||= [:id, :act,:code,:site_name,:volume, :partner_name,:sampling_equipment_name,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
     conditions={:page => current_page, :per_page => rows_per_page}

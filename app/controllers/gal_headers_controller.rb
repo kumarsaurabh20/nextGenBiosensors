@@ -91,7 +91,7 @@ def post_data
 #        format.json { render :json => gal_headers.to_jqgrid_json([:id,"act","gal_id","version","row_count","column_count","bcount",:block_type,"company","header_upload_date","edit"], params[:page], params[:rows], gal_headers.total_entries) }			
 #    end
 
-  index_columns ||= [:id,"act","gal_id","version","row_count","column_count","bcount",:block_type,"company","header_upload_date","edit"]
+  index_columns ||= [:id,:act,:gal_id,:version,:row_count,:column_count,:bcount,:block_type,:company,:header_upload_date,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

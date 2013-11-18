@@ -76,7 +76,7 @@ class GalBlocksController < AuthController
      #   format.json { render :json => gal_blocks.to_jqgrid_json([:id,"act","gal_id","block","x_origin","y_origin","featureDiameter","x_feature","x_spacing","y_feature","y_spacing","block_upload_date","edit"], params[:page], params[:rows], gal_blocks.total_entries) }			
     #end
 
-   index_columns ||= [:id,"act","gal_id","block","x_origin","y_origin","featureDiameter","x_feature","x_spacing","y_feature","y_spacing","block_upload_date","edit"]
+   index_columns ||= [:id,:act,:gal_id,:block,:x_origin,:y_origin,:featureDiameter,:x_feature,:x_spacing,:y_feature,:y_spacing,:block_upload_date,:edit]
     current_page = params[:page] ? params[:page].to_i : 1
     rows_per_page = params[:rows] ? params[:rows].to_i : 10
 

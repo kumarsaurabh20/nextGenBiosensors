@@ -118,7 +118,7 @@ end
           @batch_samplings.sampling_assets.each do |index|
      
           file_name = index.safi_file_name
-	  directory = "/home/kumar/microaquadt/public/safis/"
+	  directory = "/home/jarvis/nextGenBiosensors/public/safis/"
           path = File.join(directory, file_name)
           str = IO.read(path)
           line = str.to_str	
@@ -191,7 +191,7 @@ end
         else 
                 
               file_name = @batch_samplings.sampling_assets.first.safi_file_name
-              directory = "/home/kumar/microaquadt/public/safis/"
+              directory = "/home/jarvis/nextGenBiosensors/public/safis/"
 		       path = File.join(directory, file_name)
 		       str = IO.read(path)
 		       line = str.to_str	       

@@ -36,9 +36,14 @@ class NucleicAcid < ActiveRecord::Base
   end
 
     attr_reader :sampling_name
+    #def sampling_name
+     #   self.filter_sample.sampling.verbose_me
+    #end
+    #by kumar on rails upgrade (undefined method sampling error) 18/11/2013 
     def sampling_name
-        self.filter_sample.sampling.verbose_me
+        Sampling.find(FilterSample.find(filter_sample_id).sampling_id).verbose_me
     end
+    
 
     attr_reader :filter_sample_name
     def filter_sample_name

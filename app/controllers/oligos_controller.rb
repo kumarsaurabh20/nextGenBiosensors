@@ -52,71 +52,51 @@ class OligosController < AuthController
 
 
   def index
-#	   @oligos = Oligo.all
-           @title = "List of oligos in GAL file"
+      @title = "List of oligos in GAL file"
 
-#    if params[:id].present?
-#        logger.warn("#{Time.now} - oligo filtered by: #{params[:id]}")
+    if params[:id].present?
+	    logger.warn("#{Time.now} - oligo filtered by: #{params[:id]}")
+		
+	    index_columns ||= [:id,:act,:oligo,:edit]
+	    current_page = params[:page] ? params[:page].to_i : 1
+	    rows_per_page = params[:rows] ? params[:rows].to_i : 10
+
+	    conditions={:page => current_page, :per_page => rows_per_page}
+	    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+	    
+	    if params[:_search] == "true"
+	      conditions[:conditions]=filter_by_conditions(index_columns)
+	    end
+	    
+	    @oligos = Oligo.find(:all, :conditions => ["microarraygal_id = ?", params[:id]])
+	    @page_oligos=Oligo.paginate(conditions)
+	    total_entries=@page_oligos.total_entries
+	    
+	    respond_with(@oligos) do |format|
+	      format.json { render :json => @oligos.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+	    end
+
+
+    else
         
-#        oligos = Oligo.find(:all, :conditions => [ "microarraygal_id = ?", params[:id]]) do
-#            paginate :page => params[:page], :per_page => params[:rows]      
-#            order_by "#{params[:sidx]} #{params[:sord]}"
-#           end
+	   index_columns ||= [:id,:act,:gal_o_code,:array_info,:oligo,:oligo_upload_date,:edit]
+	   current_page = params[:page] ? params[:page].to_i : 1
+	   rows_per_page = params[:rows] ? params[:rows].to_i : 10
 
-#         respond_to do |format|
-#        format.html 
-#        format.json { render :json => oligos.to_jqgrid_json([:id,"act","oligo","edit"], params[:page], params[:rows], oligos.total_entries) }			
-#      end
-      
-    
-#    else
-        
-#	  oligos = Oligo.find(:all) do
-
-#			if params[:_search] == "true"
-#			   microarraygal.id =~ "%#{params[:gal_o_code]}%" if params[:gal_o_code].present?
-#			   #oligo_sequence.id =~ "%#{params[:oligo_id]}%" if params[:oligo_id].present?
-#			   oligo_sequence.code =~ "%#{params[:oligo]}%" if params[:oligo].present?
-			   
-#			end
-
-#	       paginate :page => params[:page], :per_page => params[:rows]
-#	       order_by "#{params[:sidx]} #{params[:sord]}" 
-
-#		       if params[:sidx] == "gal_o_code"
-#			  order_by "microarraygals.id #{params[:sord]}"
-#		      # elsif params[:sidx] == "oligo_id"
-#			  #order_by "oligo_sequences.id #{params[:sord]}"
-#		       elsif params[:sidx] == "oligo"
-#			  order_by "oligo_sequences.code #{params[:sord]}"    
-#		       end  
-#    
-#       end
-#		respond_to do |format|
-#		format.html 
-#		format.json { render :json => oligos.to_jqgrid_json([:id,"act","gal_o_code","array_info","oligo","oligo_upload_date","edit"], params[:page], params[:rows], oligos.total_entries) }			
-#	      end
-#    end
-
-
-   index_columns ||= [:id,:act,:gal_o_code,:array_info,:oligo,:oligo_upload_date,:edit]
-    current_page = params[:page] ? params[:page].to_i : 1
-    rows_per_page = params[:rows] ? params[:rows].to_i : 10
-
-    conditions={:page => current_page, :per_page => rows_per_page}
-    conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
-    
-    if params[:_search] == "true"
-      conditions[:conditions]=filter_by_conditions(index_columns)
-    end
-    
-    @oligos=Oligo.paginate(conditions)
-    total_entries=@oligos.total_entries
-    
-    respond_with(@oligos) do |format|
-      format.json { render :json => @oligos.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
-    end
-      
+	   conditions={:page => current_page, :per_page => rows_per_page}
+	   conditions[:order] = params["sidx"] + " " + params["sord"] unless (params[:sidx].blank? || params[:sord].blank?)
+	    
+	   if params[:_search] == "true"
+	     conditions[:conditions]=filter_by_conditions(index_columns)
+	   end
+	    
+	   @oligos=Oligo.paginate(conditions)
+	   total_entries=@oligos.total_entries
+	    
+	   respond_with(@oligos) do |format|
+	      format.json { render :json => @oligos.to_jqgrid_json(index_columns, current_page, rows_per_page, total_entries)}  
+	   end
+    end      
   end
 
   def show

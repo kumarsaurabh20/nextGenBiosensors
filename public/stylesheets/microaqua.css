@@ -3,15 +3,15 @@ body {  background: #E6F3F7; /*#cff;*/}
 #header {  padding-top: 5px; /*20px*/}
 #header img {  padding: 0.5em; /*1em*/  background: #fff;}
 #header table {margin-bottom: 0em; background-color: transparent;}
-#content {  margin-top: 0em; /*1em*/  font-size: 120%;
-  padding: 20px;  background: #fff;}
+#content {  margin-top: 0em; /*1em*/  font-size: 100%;
+  padding: none;  background: #E6F3F7;}
 /* Links */
 a {  color: #09c;  text-decoration: none;}
 a:hover {  color: #069;  text-decoration: underline;}
 a:visited {  color: #069;}
 /* Navigation */
 .navigation {  float: right;}
-.navigation {  background-color: white;  padding: 0 0.7em;  white-space: nowrap;}
+.navigation {  background-color: white;  padding: 0 0.7em; white-space: nowrap; }
 ul.navigation {  margin: 0;}
 .navigation li {  list-style-type: none;  display: inline-block;  padding: 0.2em 0;}
 .navigation li a {  padding: 0 5px;  font-weight: bold;}

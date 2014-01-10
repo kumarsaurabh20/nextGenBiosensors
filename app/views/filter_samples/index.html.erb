@@ -16,17 +16,6 @@
 <br />
 <br />
 
-<script type="text/javascript" >
-     function handleSelection(id) {
-        <%= remote_function(:url => {:controller=> 'sampling_sites',
-                     :action => 'show'}) %>
-     }
-//,:with => "id= " + String(id)
-//use, :selection_handler => "handleSelection", :direct_selection => true
-//use, :grid_complete => "grid_complete" 
-//, :hidden => true
-</script>
-
 
 <%=raw jqgrid("List of filter samples: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", "/filter_samples",
 	[

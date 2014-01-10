@@ -22,19 +22,6 @@
 <h1>Microarray .GPR Intensity/Scan Data</h1>
 <br />
 <br />
-<script type="text/javascript" >
-
-//jQuery("#ngbgrid").jqGrid('navGrid','hideCol',"ID"); }); 
-
-     function handleSelection(id) {
-        <%= remote_function(:url => {:controller=> 'gpr_datas',
-                     :action => 'index'})
-        %>
-     }
-//,:with => "id= " + String(id)
-//use, :selection_handler => "handleSelection", :direct_selection => true
-//use, :grid_complete => "grid_complete" 
-</script>
 
 <%=raw jqgrid("Data in a GPR file: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", data_gprs_path,
 	[

@@ -1,7 +1,9 @@
 class Experiment < ActiveRecord::Base
 
- include ActionController::UrlWriter
- include ExperimentHelper
+ #include ActionController::UrlWriter
+ include Rails.application.routes.url_helpers
+
+  include ExperimentHelper
 
   validates_presence_of :partner
 

@@ -180,20 +180,25 @@ function SetName(req) {
     <h5><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Root" target="_blank">Taxonomy database maintained by NCBI/GenBank</a></h5>
     <br /><b>Research using taxonomy name:</b>
     <input type="text" id="search_name"></input>&nbsp;<button type="button" id="btnbiocallname" 
-        onclick="<%= remote_function(
-                               :url => { :action => :esearch } , 
-                               :with => "'es=' + $('#search_name').value",
-                               :success => "SetName(request);",
-                               :failure => "alert('HTTP Error ' + request.status + '!')"
-                    ); 
-                %>"
-        text="Browse" title="the name must be an existing word in the database">Find by name</button><br />
+    text="Browse" title="the name must be an existing word in the database">Find by name</button><br />
     <div id="dvName" style="width:200;height:200"></div>
     <pre id="preName"></pre>
     <textarea id="taName" class="hide bioarea" rows="10" cols="100">
     </textarea>
 
 <script type="text/javascript" >
+$("#btnbiocallname").click(function() { 
+                var request = $.ajax({
+                
+                url: "/oligo_sequence/esearch",
+                type: "POST",
+                data: "'es=' + $('#search_name').value",
+                });
+       
+                request.done(function(request) { SetName(request) };);
+                request.fail(function(request) { alert(HTTP Error ' + request.status + '!'); };);
+
+                };)
 function SetTaxo2(req) { //alert('SetTaxo: ' + req);
     //DOM
     try {
@@ -243,13 +248,7 @@ function AutoSelect(tax_id, ScientificName) {
     <b>Research using taxonomy id:</b>
     <input type="text" id="search_tax" name=""></input>&nbsp;<button type="button" id="btnbiocall" 
         ondbclick="lookupBio(); return false;"
-        onclick="<%= remote_function(
-                           :url => { :action => :lookup } , 
-                           :with => "'st='+$('search_tax').value",
-                           :success => "SetTaxo2(request);",
-                           :failure => "alert('HTTP Error ' + request.status + '!')"
-                    ); 
-                %>"
+        
         text="Browse" title="you can add multiple ids separated by virgule">Find by id(s)</button><br />
 <div id="treeBox" style="width:200;height:200"></div>
     <textarea id="resbio" class="hide bioarea"  rows="10" cols="100">
@@ -258,6 +257,23 @@ function AutoSelect(tax_id, ScientificName) {
     <h5><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Root" target="_blank">Taxonomy database maintained by NCBI/GenBank</a></h5>
     <br />
 <%= @tree2 %>
+
+<script type="text/javascript">
+
+$("#btnbiocall").click(function() { 
+                var request = $.ajax({
+                
+                url: "/oligo_sequence/lookup",
+                type: "POST",
+                data: "'st='+$('search_tax').value",
+                });
+       
+                request.done(function(request) { SetTaxo2(request) };);
+                request.fail(function(request) { alert(HTTP Error ' + request.status + '!'); };);
+
+                };)
+
+</script>
 
 </td><tr></table>
 

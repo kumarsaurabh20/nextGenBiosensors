@@ -1,6 +1,8 @@
 class Microarraygpr < ActiveRecord::Base
 
- include ActionController::UrlWriter
+ #include ActionController::UrlWriter
+ include Rails.application.routes.url_helpers
+
  include ExperimentHelper
 
   validates_presence_of :gpr_title, :message => "Can't be empty, field is mandatory. "

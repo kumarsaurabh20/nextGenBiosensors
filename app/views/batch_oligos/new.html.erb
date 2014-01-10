@@ -17,7 +17,7 @@
 <%= link_to 'Back', oligo_sequences_path %>
 <br />              
 <br />
-<% form_for(@batch_oligo, :html => {:multipart => true}) do |f| %>
+<%= form_for(@batch_oligo, :html => {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
 <style>
@@ -48,7 +48,7 @@
 </table> 
 	          
 	    <div class="paperclip">
-	    <% f.fields_for :assets do |asset| %><br>
+	    <%= f.fields_for :assets do |asset| %><br>
             
 	 <%= asset.file_field :fiolse %> <br>
             

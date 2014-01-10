@@ -1,6 +1,8 @@
 class GalBlock < ActiveRecord::Base
 
- include ActionController::UrlWriter
+ #include ActionController::UrlWriter
+ include Rails.application.routes.url_helpers
+
  include ExperimentHelper
 
   

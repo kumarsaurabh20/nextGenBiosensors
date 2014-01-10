@@ -40,15 +40,6 @@ var obj = jQuery("input:checked").map(function() { return jQuery(this).parents('
     window.open('data:text/csv;charset=utf-8,' + escape(result));
 
 };
-
-
-//jQuery('#ngbgrid').editRow(id, true, formatEditors);
-  
- function handleSelection(id) {
-        <%= remote_function(:url => {:controller=> 'oligo_sequences',
-                 :action => 'show'}) %>
-    }
-//,:with => "id= " + String(id))
   
  function grdloaded(){
         //alert('Loaded')

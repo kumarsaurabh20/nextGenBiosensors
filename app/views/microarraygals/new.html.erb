@@ -19,7 +19,7 @@
 
 <%= link_to 'Back', microarraygals_path %>
 
-<% form_for(@microarraygal, :html => {:multipart => true}) do |f| %>
+<%= form_for(@microarraygal, :html => {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <div class="actions">

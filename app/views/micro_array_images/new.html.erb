@@ -14,7 +14,7 @@
 
 <%= link_to 'Back', micro_array_images_path %>
 
-<% form_for(@micro_array_image, :html => {:multipart => true}) do |f| %>
+<%= form_for(@micro_array_image, :html => {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <div class="actions">
@@ -59,7 +59,7 @@
 </table> 
 
  <div class="paperclip">
-    <% f.fields_for :image_assets do |asset| %>
+    <%= f.fields_for :image_assets do |asset| %>
 
     <% if asset.object.new_record? %>
     <br />

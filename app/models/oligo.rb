@@ -1,6 +1,9 @@
 class Oligo < ActiveRecord::Base
 
- include ActionController::UrlWriter
+ #include ActionController::UrlWriter
+ include Rails.application.routes.url_helpers
+ #its important for paths in act and edit
+
  include ExperimentHelper
   
   belongs_to :microarraygal

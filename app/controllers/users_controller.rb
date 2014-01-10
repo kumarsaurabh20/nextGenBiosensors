@@ -87,7 +87,7 @@ class UsersController < AuthController
       #Automatically sign in the new created user
       sign_in @user
 
-      flash[:success] = "Welcome to the microaqua bio application!"
+      flash[:success] = "Welcome to the microaqua web application!"
       # Handle a successful save.
       redirect_to @user  #equal as user_path(@user)
     else

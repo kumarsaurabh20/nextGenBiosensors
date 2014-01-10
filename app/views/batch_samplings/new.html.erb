@@ -18,7 +18,7 @@
 <%= link_to 'Back', samplings_path %>
 <br /><br />
 
-<% form_for(@batch_sampling, :html => {:multipart => true}) do |f| %>
+<%= form_for(@batch_sampling, :html => {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
 <style>
@@ -48,7 +48,7 @@
 	    
     
 	    <div class="paperclip">
-	    <% f.fields_for :sampling_assets do |asset| %><br>
+	    <%= f.fields_for :sampling_assets do |asset| %><br>
             
 	    <%= asset.file_field :safi %><br>
             

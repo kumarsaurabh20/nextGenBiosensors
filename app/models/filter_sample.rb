@@ -4,12 +4,15 @@
 
 class FilterSample < ActiveRecord::Base
 
-  include ActionController::UrlWriter
+  #include ActionController::UrlWriter
+  include Rails.application.routes.url_helpers
 
-  #Filter active record  
-  named_scope :created_after, lambda { |date| {:conditions => ["samplingDate > ?", date]} }
-  named_scope :created_at, lambda { |date| {:conditions => ["samplingDate = ?", date]} }
-  named_scope :coded, lambda { |name| {:conditions => {:code => name}} }
+  #Filter active record
+  #named_scope :created_after, lambda { |date| {:conditions => ["samplingDate > ?", date]} } 
+  #named_scope has been changed to scope in 3.1.x 
+  scope :created_after, lambda { |date| {:conditions => ["samplingDate > ?", date]} }
+  scope :created_at, lambda { |date| {:conditions => ["samplingDate = ?", date]} }
+  scope :coded, lambda { |name| {:conditions => {:code => name}} }
   
   
 

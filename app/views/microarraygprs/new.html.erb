@@ -15,7 +15,7 @@
 
 <%= link_to 'Back', microarraygprs_path %>
 
-<% form_for(@microarraygpr, :html => {:multipart => true}) do |f| %>
+<%= form_for(@microarraygpr, :html => {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <div class="actions">

@@ -23,9 +23,9 @@ Bio::NCBI.default_tool ||= 'unicamBio'
   end
 
 
-
+#RAILS_ROOT has been chnaged to Rails.root from rails 3.1.x
   def resolve_dxhtml
-    path_to_folder = RAILS_ROOT + "/public/stylesheets/dxhmltree/imgs"
+    path_to_folder = Rails.root + "/public/stylesheets/dxhmltree/imgs"
     return path_to_folder
   end
 

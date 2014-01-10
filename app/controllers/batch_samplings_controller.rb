@@ -1,6 +1,6 @@
 class BatchSamplingsController < ApplicationController
   
-
+require 'csv'
 class UnknownTypeError < StandardError
 end
 
@@ -277,7 +277,7 @@ end
      #@sample1 = Sampling.find(1)
      #@sample2 = Sampling.find(2)
 
-    file = FasterCSV.generate do |line|
+    file = CSV.generate do |line|
     cols = ["Sampling Site", "Partner", "Sampling date(YYYY-MM-DD)","Volume","Comment","Air Temp. (default = 0.0)", "Moisture",
             "Pressure", "Wind Speed", "Wind Direction","Water Flow","Light Int.","Rainfall evts.", "Depth",
             "Turbidity", "Salinity", "Tidal Range","Operators","Water Temp.","Conductivity", "Phosphates",

@@ -1,19 +1,10 @@
-# == Schema Information
-# Schema version: <timestamp>
-#
-# Table name: users
-#
-#  id         :integer         not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
-#
-
 class User < ActiveRecord::Base
   #create a virtual password attribute
   attr_accessor :password
-  attr_accessible :name, :email, :password, :password_confirmation
+
+  #has_secure_password
+
+  attr_accessible :name, :email, :password
 
   EmailRegex = /\A[\w+\-._]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -38,19 +29,19 @@ class User < ActiveRecord::Base
 
   # Return true if the user's password matches the submitted password.
   def has_password?(submitted_password)
-    # Compare encrypted_password with the encrypted version of submitted_password.
-    encrypted_password == encrypt(submitted_password)
+      # Compare encrypted_password with the encrypted version of submitted_password.
+      self.encrypted_password == encrypt(submitted_password)
   end
 
-  #The way to define a class method is to use the self keyword in the method definition
-  #def self.authenticate(email, submitted_password)
-  def self.authenticate(name, submitted_password)
+  
+  def self.authenticate(string, submitted_password)
     #Exist class method find_by_email because INDEX on column
     #user = find_by_email(email)
     # add_index :users, :name, :unique => true
-    user = find_by_name(name)
+    #user = find_by_name(name)
+    user = self.where(name: string).first #.try(authenticate(name, submitted_password))   
     return nil  if user.nil?
-    return user if user.has_password?(submitted_password)
+    return user if user.encrypted_password == user.encrypt(submitted_password)
   end
 
   #Use in sign_in function in the Session HELPER
@@ -64,11 +55,10 @@ class User < ActiveRecord::Base
     #and at some point use the find_by_remember_token method
     #But the validations will fail if we simply use save (no virtual password attribute which is required)
     
-    #save_without_validation -- edited by kumar
-    save(validate=false)
+    #save_without_validation #-- edited by kumar
+    #save(validate=false)
+    self.save(:validate => false)
   end
-
-  private
 
     #use by create new user (with all parameters required for saving)
     #use by sign in method during storing remember_me data.

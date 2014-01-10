@@ -15,7 +15,7 @@
 <%= link_to 'Show', @micro_array_image %> |
 <%= link_to 'Back', micro_array_images_path %>
 
-<% form_for(@micro_array_image, :html => {:multipart => true}) do |f| %>
+<%= form_for(@micro_array_image, :html => {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <div class="actions">

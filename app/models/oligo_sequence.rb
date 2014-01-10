@@ -3,6 +3,7 @@ class OligoSequence < ActiveRecord::Base
 #include ActionController::UrlWriter #deprecated
 
 include Rails.application.routes.url_helpers
+
 include OligoSequencesHelper
 #include CodeTypesHelper
 #include SessionsHelper

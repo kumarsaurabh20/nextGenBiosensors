@@ -23,19 +23,7 @@
 <h1>Microarray Oligo's information</h1>
 <br />
 <br />
-<script type="text/javascript" >
 
-//jQuery("#ngbgrid").jqGrid('navGrid','hideCol',"ID"); }); 
-
-     function handleSelection(id) {
-        <%= remote_function(:url => {:controller=> 'oligos',
-                     :action => 'show'})
-        %>
-     }
-//,:with => "id= " + String(id)
-//use, :selection_handler => "handleSelection", :direct_selection => true
-//use, :grid_complete => "grid_complete" 
-</script>
 
 <%=raw jqgrid("List of oligos in GAL file: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", oligos_path,
 	[

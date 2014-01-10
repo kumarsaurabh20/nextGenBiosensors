@@ -1,5 +1,7 @@
 class BatchOligosController < ApplicationController
  
+ require 'csv'
+
 class UnknownTypeError < StandardError
 end
 
@@ -208,7 +210,7 @@ if line =~ /(\w+)[\t,](\S+)[\t,](\w+)[\t,](\w+)[\t,](\w+[\s\w+]*)[\t,](\d+[-\/]\
      #@oligo1 = OligoSequence.find(1)
      #@oligo2 = OligoSequence.find(2)
 
-    file = FasterCSV.generate do |line|
+    file = CSV.generate do |line|
     cols = ["DNASequence", "Code", "Partner(refer to manual)","Person(refer to manual)","Name","Date(YYYY-MM-DD)", "Description"]
     line << cols
                    

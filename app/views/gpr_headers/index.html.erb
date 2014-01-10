@@ -21,19 +21,7 @@
 <h1>Microarray .GPR File Header Data</h1>
 <br />
 <br />
-<script type="text/javascript" >
 
-//jQuery("#ngbgrid").jqGrid('navGrid','hideCol',"ID"); }); 
-
-     function handleSelection(id) {
-        <%= remote_function(:url => {:controller=> 'gal_headers',
-                     :action => 'show'})
-        %>
-     }
-//,:with => "id= " + String(id)
-//use, :selection_handler => "handleSelection", :direct_selection => true
-//use, :grid_complete => "grid_complete" 
-</script>
 
 <%=raw jqgrid("GPR file header information: you can filter (using the lens icon in the bottom of the grid), sort (clicking on the header column), scroll the data in the grid (using the pagination system)", "ngbgrid", gpr_headers_path,
 	[

@@ -16,12 +16,12 @@
   </ul>
 
   <% if signed_in? %>
-    <%= link_to appHelperLogout, signout_path, :method => :delete%>
-  <% else
-      if not request.url.include? 'signin' %>
-        <%= link_to appHelperLogin, signin_path %>
-    <% end
-     end %>
+    <%= link_to appHelperLogout, signout_path, :method => :delete %>
+  <% else %>
+      <% if !request.url.include? 'signin' %>
+        <%= link_to(appHelperLogin, signin_path) %>
+     <% end %>
+  <% end %>
 
   <% if signed_in? %>
 

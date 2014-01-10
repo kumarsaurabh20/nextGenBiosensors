@@ -1,8 +1,9 @@
 class DataGpr < ActiveRecord::Base
 
 
-include ActionController::UrlWriter
- include ExperimentHelper
+#include ActionController::UrlWriter
+include Rails.application.routes.url_helpers 
+include ExperimentHelper
   
   belongs_to :microarraygpr
   belongs_to :gpr_header

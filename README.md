@@ -2,7 +2,7 @@ nextGenBiosensors
 =================
 
 A data management and data analysis pipeline for microarrays and metagenomics based experiments
-Currently implemented on ruby 1.8.7 and rails 2.3.11, but soon be updated to higher versions of ruby and rails.
+Currently upgraded to ruby 1.9.3 and rails 3.2.11. Asset pipeline is not implemented yet and would be implemented in next upgrade. 
 
 
 nextGenBiosensors app installation after git, ruby and rails setup

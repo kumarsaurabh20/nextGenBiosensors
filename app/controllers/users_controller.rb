@@ -11,7 +11,7 @@ class UsersController < AuthController
   before_filter :modify_user, :only => [:edit, :update]
 
   #do not write to log password
-  filter_parameter_logging :password
+  #filter_parameter_logging :password
 
   # GET /users
   # GET /users.xml
